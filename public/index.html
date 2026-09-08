@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RAVN Automotive — Detailing · Performance · EV Service · Oslo</title>
+<meta name="description" content="RAVN Automotive — premium detailing, performance tuning, EV & hybrid service, tire hotel and pre-purchase diagnostics in Oslo, Norway." />
+<meta name="theme-color" content="#0f0f12" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!--
+  ===== LOGO EXPLORATION (art direction notes) =====
+  Sketch A — pure wordmark: "RAVN" in Unbounded, wide tracking, one brass hairline
+             cutting under the letterforms. No icon. Very confident, very quiet.
+  Sketch B — RA monogram inside an angular crest (no rounded shield, no 45° diamond):
+             a tapered hexagonal crest with a chevron notch reading as a raven wing / speed.
+  Sketch C — the "V" of RAVN drawn as a downward chevron beak (raven = ravn in Norwegian).
+  CHOSEN: B + A combined — angular crest emblem locked up with the tracked wordmark.
+  It reads as an automotive marque, references the raven, and avoids the generic
+  diamond/gear/water-drop/soft-shield AI stamp.
+-->
+
+<style>
+  :root{
+    --bg:#0f0f12;
+    --bg-2:#15151a;
+    --surface:#191921;
+    --surface-2:#1f2029;
+    --line:#2a2b35;
+    --text:#ece9e1;
+    --muted:#928f87;
+    --brass:#c8a15a;
+    --brass-2:#e3c489;
+    --copper:#b06a3f;
+    --radius:14px;
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;background:var(--bg)}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Golos Text",system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.font-display{font-family:"Unbounded",system-ui,sans-serif;line-height:1.05;font-weight:700}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  section{scroll-margin-top:84px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    font-family:"Golos Text",sans-serif;font-weight:600;font-size:12px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--brass);display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--brass);opacity:.7}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-family:"Golos Text",sans-serif;font-weight:600;font-size:14px;letter-spacing:.02em;
+    padding:13px 22px;border-radius:10px;border:1px solid transparent;cursor:pointer;
+    transition:transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+  }
+  .btn-primary{background:var(--brass);color:#171410;border-color:var(--brass)}
+  .btn-primary:hover{background:var(--brass-2);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--brass);color:var(--brass);transform:translateY(-2px)}
+
+  /* ===== HEADER ===== */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:background .3s ease, border-color .3s ease, backdrop-filter .3s;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{background:rgba(15,15,18,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand svg{flex:none}
+  .brand .wm{display:flex;flex-direction:column;line-height:1}
+  .brand .wm b{font-family:"Unbounded";font-weight:700;font-size:18px;letter-spacing:.18em;color:var(--text)}
+  .brand .wm span{font-size:9px;letter-spacing:.42em;color:var(--muted);margin-top:5px;text-transform:uppercase}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .18s;position:relative}
+  .nav-links a:hover{color:var(--text)}
+  .nav-actions{display:flex;align-items:center;gap:16px}
+  .lang{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .lang button{
+    background:transparent;border:none;color:var(--muted);cursor:pointer;
+    font-family:"Golos Text";font-weight:600;font-size:12px;letter-spacing:.05em;
+    padding:8px 11px;transition:background .18s,color .18s;
+  }
+  .lang button.active{background:var(--brass);color:#171410}
+  .lang button:not(.active):hover{color:var(--text)}
+  .burger{display:none;background:none;border:1px solid var(--line);border-radius:9px;padding:9px;cursor:pointer}
+  .burger span{display:block;width:20px;height:2px;background:var(--text);margin:3px 0}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+  .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .hero .veil{
+    position:absolute;inset:0;z-index:1;
+    background:
+      linear-gradient(180deg, rgba(15,15,18,.55) 0%, rgba(15,15,18,.15) 35%, rgba(15,15,18,.75) 78%, var(--bg) 100%),
+      linear-gradient(90deg, rgba(15,15,18,.7) 0%, rgba(15,15,18,0) 60%);
+  }
+  .hero-inner{position:relative;z-index:2;width:100%;padding-bottom:60px;padding-top:120px}
+  .hero h1{font-size:clamp(40px,7vw,88px);font-weight:800;letter-spacing:-.01em;margin:18px 0 0;max-width:14ch}
+  .hero h1 em{font-style:normal;color:var(--brass)}
+  .hero p{color:var(--text);opacity:.86;font-size:clamp(15px,1.6vw,19px);max-width:52ch;margin-top:20px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  .sound-btn{
+    position:absolute;right:24px;bottom:36px;z-index:3;
+    width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
+    background:rgba(15,15,18,.6);backdrop-filter:blur(6px);color:var(--text);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;
+  }
+  .sound-btn:hover{border-color:var(--brass);color:var(--brass)}
+
+  /* ===== STATS ===== */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .stat{padding:34px 24px;border-left:1px solid var(--line)}
+  .stat:first-child{border-left:none}
+  .stat .num{font-family:"Unbounded";font-weight:700;font-size:clamp(30px,4vw,46px);color:var(--text)}
+  .stat .num .suf{color:var(--brass)}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:6px;letter-spacing:.02em}
+
+  /* ===== SECTION HEADS ===== */
+  .sec{padding:96px 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:44px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(28px,4vw,46px);font-weight:700;letter-spacing:-.01em;max-width:16ch}
+  .sec-head p{color:var(--muted);max-width:42ch;font-size:15px}
+
+  /* ===== SERVICES ===== */
+  .services{background:var(--bg)}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .svc{
+    padding:34px 30px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--surface);position:relative;transition:background .25s ease;min-height:220px;
+    display:flex;flex-direction:column;
+  }
+  .svc-grid .svc:nth-child(3n){border-right:none}
+  .svc-grid .svc:nth-child(n+4){}
+  .svc-grid .svc:nth-last-child(-n+3){border-bottom:none}
+  .svc:hover{background:var(--surface-2)}
+  .svc .no{font-family:"Unbounded";font-size:12px;color:var(--muted);letter-spacing:.1em}
+  .svc .ic{margin:0 0 auto;color:var(--brass)}
+  .svc h3{font-size:20px;font-weight:600;margin:20px 0 10px;letter-spacing:.01em}
+  .svc p{color:var(--muted);font-size:14px}
+  .svc::after{content:"";position:absolute;left:0;top:0;height:2px;width:0;background:var(--brass);transition:width .3s ease}
+  .svc:hover::after{width:100%}
+
+  /* ===== GALLERY ===== */
+  .gallery{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+  .rail{display:flex;gap:18px;overflow-x:auto;padding:6px 24px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .rail::-webkit-scrollbar{height:6px}
+  .rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .rail::-webkit-scrollbar-thumb:hover{background:var(--brass)}
+  .shot{flex:0 0 auto;width:min(420px,80vw);aspect-ratio:4/3;border-radius:12px;overflow:hidden;scroll-snap-align:start;position:relative;border:1px solid var(--line)}
+  .shot img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;filter:saturate(.92)}
+  .shot:hover img{transform:scale(1.06)}
+  .shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;font-size:13px;font-weight:600;letter-spacing:.02em;background:linear-gradient(0deg,rgba(15,15,18,.9),transparent)}
+  .rail-hint{color:var(--muted);font-size:12px;letter-spacing:.05em;padding:0 24px;margin-top:14px}
+
+  /* ===== BOOKING + DEPOSIT ===== */
+  .book-layout{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:32px}
+  .panel h3{font-size:22px;font-weight:600;margin-bottom:4px}
+  .panel .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .field input,.field select{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--text);
+    font-family:"Golos Text";font-size:15px;padding:12px 14px;transition:border-color .18s;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--brass)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-msg{margin-top:8px;padding:14px 16px;border-radius:10px;font-size:14px;font-weight:500;display:none}
+  .form-msg.ok{display:block;background:rgba(200,161,90,.12);border:1px solid var(--brass);color:var(--brass-2)}
+
+  /* credit card visual */
+  .card-visual{
+    position:relative;border-radius:16px;padding:24px;color:#f4efe6;overflow:hidden;
+    background:linear-gradient(135deg,#26272f 0%,#1a1b22 55%,#2c241a 100%);
+    border:1px solid var(--line);margin-bottom:24px;aspect-ratio:1.6/1;max-height:210px;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .card-visual::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(200,161,90,.28),transparent 70%)}
+  .card-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+  .chip{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--brass-2),var(--copper))}
+  .card-num{font-family:"Unbounded";font-size:clamp(15px,2.4vw,19px);letter-spacing:.12em;position:relative;z-index:1}
+  .card-bottom{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.06em;color:#cfc7b8;position:relative;z-index:1;text-transform:uppercase}
+  .demo-note{margin-top:16px;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+  .demo-note svg{flex:none;color:var(--brass);margin-top:1px}
+  .paid-msg{margin-top:14px;padding:14px 16px;border-radius:10px;font-size:13.5px;background:rgba(176,106,63,.14);border:1px solid var(--copper);color:#e6b591;display:none}
+  .paid-msg.show{display:block}
+
+  /* ===== CONTACT / MAP ===== */
+  .contact{background:var(--bg)}
+  .contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .map-embed{min-height:420px;height:100%}
+  .map-embed iframe{width:100%;height:100%;min-height:420px;border:0;filter:grayscale(.4) invert(.9) hue-rotate(180deg) contrast(.9)}
+  .contact-info{padding:40px;background:var(--surface);display:flex;flex-direction:column;gap:26px}
+  .ci-item .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+  .ci-item .v{font-size:16px;color:var(--text)}
+  .ci-item .v.big{font-family:"Unbounded";font-size:20px;font-weight:600}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--bg-2);border-top:1px solid var(--line);padding:54px 0 30px}
+  .foot-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;margin-bottom:36px}
+  .foot-links{display:flex;gap:40px;flex-wrap:wrap}
+  .foot-col h5{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-family:"Golos Text";font-weight:600}
+  .foot-col a{display:block;color:var(--text);opacity:.75;font-size:14px;margin-bottom:9px;transition:opacity .18s,color .18s}
+  .foot-col a:hover{opacity:1;color:var(--brass)}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+
+  /* ===== MOBILE ===== */
+  @media (max-width:900px){
+    .book-layout{grid-template-columns:1fr}
+    .contact-grid{grid-template-columns:1fr}
+    .svc-grid{grid-template-columns:repeat(2,1fr)}
+    .svc-grid .svc:nth-child(3n){border-right:1px solid var(--line)}
+    .svc-grid .svc:nth-child(2n){border-right:none}
+    .svc-grid .svc:nth-last-child(-n+3){border-bottom:1px solid var(--line)}
+    .svc-grid .svc:nth-last-child(-n+2){border-bottom:none}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(3){border-left:none}
+    .stat:nth-child(n+3){border-top:1px solid var(--line)}
+  }
+  @media (max-width:720px){
+    .nav-links{display:none}
+    .nav-links.open{
+      display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;
+      background:rgba(15,15,18,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+      padding:20px 24px;gap:18px;
+    }
+    .burger{display:block}
+    .cta-book-nav{display:none}
+    .sec{padding:70px 0}
+    .row2{grid-template-columns:1fr}
+  }
+  @media (max-width:480px){
+    .svc-grid{grid-template-columns:1fr}
+    .svc-grid .svc{border-right:none!important;border-bottom:1px solid var(--line)!important}
+    .svc-grid .svc:last-child{border-bottom:none!important}
+    .stats-grid{grid-template-columns:1fr}
+    .stat{border-left:none;border-top:1px solid var(--line)}
+    .stat:first-child{border-top:none}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="header">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#top" aria-label="RAVN Automotive home">
+        <!-- CHOSEN EMBLEM: angular RA crest / raven-wing chevron -->
+        <svg width="38" height="44" viewBox="0 0 38 44" fill="none" aria-hidden="true">
+          <!-- tapered angular crest (no rounded shield, no diamond) -->
+          <path d="M3 5 L19 2 L35 5 L35 26 L19 42 L3 26 Z" stroke="#c8a15a" stroke-width="1.5" fill="#15151a"/>
+          <!-- chevron / raven wing forming the A apex + motion -->
+          <path d="M9 27 L19 13 L29 27" stroke="#c8a15a" stroke-width="2.2" stroke-linejoin="miter" fill="none"/>
+          <path d="M13 31 L19 22 L25 31" stroke="#b06a3f" stroke-width="2" stroke-linejoin="miter" fill="none"/>
+          <!-- R stem detail -->
+          <line x1="19" y1="13" x2="19" y2="9" stroke="#e3c489" stroke-width="2.2"/>
+        </svg>
+        <span class="wm"><b>RAVN</b><span>Automotive · Oslo</span></span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#services" data-i18n="nav_services">Services</a>
+        <a href="#gallery" data-i18n="nav_gallery">Work</a>
+        <a href="#booking" data-i18n="nav_booking">Booking</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="lang" role="group" aria-label="Language">
+          <button data-lang="en" class="active">EN</button>
+          <button data-lang="no">NO</button>
+          <button data-lang="ru">RU</button>
+        </div>
+        <a href="#booking" class="btn btn-primary cta-book-nav" data-i18n="cta_book">Book now</a>
+        <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <video autoplay muted loop playsinline id="heroVideo"
+    poster="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600">
+    <source src="https://assets.mixkit.co/videos/64/64-1080.mp4" type="video/mp4" />
+    <source src="https://assets.mixkit.co/videos/35540/35540-720.mp4" type="video/mp4" />
+  </video>
+  <div class="veil"></div>
+
+  <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">
+    <svg id="soundIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+  </button>
+
+  <div class="hero-inner">
+    <div class="wrap">
+      <span class="eyebrow" data-i18n="hero_eyebrow">Oslo · Norway — since 2014</span>
+      <h1 data-i18n="hero_title">The workshop your car <em>deserves.</em></h1>
+      <p data-i18n="hero_sub">Detailing, performance, EV & hybrid service and seasonal tire storage — handled with the precision of a factory and the care of a private garage.</p>
+      <div class="hero-cta">
+        <a href="#booking" class="btn btn-primary" data-i18n="hero_book">Book an appointment</a>
+        <a href="#services" class="btn btn-ghost" data-i18n="hero_services">Explore services</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<div class="stats">
+  <div class="wrap" style="padding:0">
+    <div class="stats-grid">
+      <div class="stat"><div class="num"><span data-count="11">0</span><span class="suf" data-i18n="stat1_suf">+ yrs</span></div><div class="lbl" data-i18n="stat1_lbl">In the trade</div></div>
+      <div class="stat"><div class="num"><span data-count="9400">0</span><span class="suf">+</span></div><div class="lbl" data-i18n="stat2_lbl">Cars serviced</div></div>
+      <div class="stat"><div class="num"><span data-count="640">0</span></div><div class="lbl" data-i18n="stat3_lbl">Tire sets stored</div></div>
+      <div class="stat"><div class="num"><span data-count="98">0</span><span class="suf">%</span></div><div class="lbl" data-i18n="stat4_lbl">Would return</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SERVICES ============ -->
+<section class="sec services" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow" data-i18n="svc_eyebrow">What we do</span>
+        <h2 data-i18n="svc_title">Six disciplines, one standard.</h2>
+      </div>
+      <p data-i18n="svc_sub">Everything a modern car needs — from paint correction to high-voltage diagnostics — under one roof in Oslo.</p>
+    </div>
+
+    <div class="svc-grid">
+      <article class="svc">
+        <span class="no">01</span>
+        <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13l2-5a2 2 0 0 1 1.9-1.3h10.2A2 2 0 0 1 19 8l2 5"/><path d="M3 13v5m18-5v5M6 18h.01M18 18h.01M3 15h18"/></svg></div>
+        <h3 data-i18n="svc1_t">Detailing</h3>
+        <p data-i18n="svc1_d">Multi-stage paint correction, ceramic coating, interior deep-clean and paint protection film.</p>
+      </article>
+      <article class="svc">
+        <span class="no">02</span>
+        <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div>
+        <h3 data-i18n="svc2_t">Tuning & Performance</h3>
+        <p data-i18n="svc2_d">Dyno-verified ECU calibration, exhaust and suspension upgrades tuned for road and track.</p>
+      </article>
+      <article class="svc">
+        <span class="no">03</span>
+        <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6 2.6 2.6 6-6a4 4 0 0 0 5.4-5.4l-2.3 2.3-2.6-2.6z"/></svg></div>
+        <h3 data-i18n="svc3_t">Maintenance & Service</h3>
+        <p data-i18n="svc3_d">Scheduled servicing, brakes, fluids and inspections — logged to full manufacturer spec.</p>
+      </article>
+      <article class="svc">
+        <span class="no">04</span>
+        <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/><circle cx="12" cy="12" r="10" opacity=".25"/></svg></div>
+        <h3 data-i18n="svc4_t">EV & Hybrid Service</h3>
+        <p data-i18n="svc4_d">High-voltage battery diagnostics, thermal systems and software care for electric and hybrid cars.</p>
+      </article>
+      <article class="svc">
+        <span class="no">05</span>
+        <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+        <h3 data-i18n="svc5_t">Tire Hotel</h3>
+        <p data-i18n="svc5_d">Climate-controlled seasonal tire storage with wash, balancing and doorstep swap booking.</p>
+      </article>
+      <article class="svc">
+        <span class="no">06</span>
+        <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></div>
+        <h3 data-i18n="svc6_t">Pre-Purchase Inspection</h3>
+        <p data-i18n="svc6_d">Independent 150-point diagnostic before you buy — full report, photos and honest advice.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="sec gallery" id="gallery" style="padding-left:0;padding-right:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow" data-i18n="gal_eyebrow">Selected work</span>
+        <h2 data-i18n="gal_title">From our bays.</h2>
+      </div>
+      <p data-i18n="gal_sub">A look at recent projects — corrections, builds and restorations delivered in Oslo.</p>
+    </div>
+  </div>
+  <div class="rail" id="rail">
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1000" alt="Yellow sports car after detailing"><figcaption data-i18n="gal_c1">Ceramic coating — 992 GT3</figcaption></figure>
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=1000" alt="Supercar in the workshop"><figcaption data-i18n="gal_c2">Performance build — V10</figcaption></figure>
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1000" alt="Sports car in a dark studio"><figcaption data-i18n="gal_c3">Paint correction — GT</figcaption></figure>
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1000" alt="Mechanic working under a car"><figcaption data-i18n="gal_c4">Full major service</figcaption></figure>
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1000" alt="White performance car"><figcaption data-i18n="gal_c5">PPF wrap — daily GT</figcaption></figure>
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?q=80&w=1000" alt="Car engine bay detail"><figcaption data-i18n="gal_c6">Classic collection care</figcaption></figure>
+    <figure class="shot"><img src="https://images.unsplash.com/photo-1489824904134-891ab64532f1?q=80&w=1000" alt="Detailer polishing a car"><figcaption data-i18n="gal_c7">Interior restoration</figcaption></figure>
+  </div>
+  <p class="rail-hint" data-i18n="gal_hint">← scroll to browse →</p>
+</section>
+
+<!-- ============ BOOKING + DEPOSIT ============ -->
+<section class="sec" id="booking" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow" data-i18n="book_eyebrow">Reserve your slot</span>
+        <h2 data-i18n="book_title">Book & secure your date.</h2>
+      </div>
+      <p data-i18n="book_sub">Pick a service and time — an optional refundable deposit locks your slot during busy seasons.</p>
+    </div>
+
+    <div class="book-layout">
+      <!-- Booking form -->
+      <div class="panel">
+        <h3 data-i18n="book_form_t">Online booking</h3>
+        <p class="sub" data-i18n="book_form_s">We confirm every request by phone within one business day.</p>
+        <form id="bookingForm" novalidate>
+          <div class="row2">
+            <div class="field"><label data-i18n="f_name">Name</label><input type="text" name="name" required placeholder="Ola Nordmann"></div>
+            <div class="field"><label data-i18n="f_phone">Phone</label><input type="tel" name="phone" required placeholder="+47 900 00 000"></div>
+          </div>
+          <div class="field"><label data-i18n="f_model">Car model</label><input type="text" name="model" required placeholder="Porsche 911 · Tesla Model 3 …"></div>
+          <div class="row2">
+            <div class="field">
+              <label data-i18n="f_service">Service</label>
+              <select name="service" required>
+                <option value="" data-i18n="f_service_ph">Choose…</option>
+                <option data-i18n="svc1_t">Detailing</option>
+                <option data-i18n="svc2_t">Tuning & Performance</option>
+                <option data-i18n="svc3_t">Maintenance & Service</option>
+                <option data-i18n="svc4_t">EV & Hybrid Service</option>
+                <option data-i18n="svc5_t">Tire Hotel</option>
+                <option data-i18n="svc6_t">Pre-Purchase Inspection</option>
+              </select>
+            </div>
+            <div class="field"><label data-i18n="f_date">Preferred date</label><input type="date" name="date" required></div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:6px" data-i18n="f_submit">Request appointment</button>
+          <div class="form-msg" id="bookMsg" role="status"></div>
+        </form>
+      </div>
+
+      <!-- Deposit demo -->
+      <div class="panel">
+        <h3 data-i18n="dep_t">Deposit (demo)</h3>
+        <p class="sub" data-i18n="dep_s">Reserve a peak-season slot with a refundable deposit.</p>
+
+        <div class="card-visual" aria-hidden="true">
+          <div class="card-top"><div class="chip"></div><span class="font-display" style="font-size:13px;letter-spacing:.14em">RAVN</span></div>
+          <div class="card-num" id="cardNum">•••• •••• •••• ••••</div>
+          <div class="card-bottom"><span id="cardName" data-i18n="dep_holder">Card holder</span><span>NOK 1 500</span></div>
+        </div>
+
+        <form id="depositForm" novalidate>
+          <div class="field"><label data-i18n="dep_cardname">Name on card</label><input type="text" name="cardname" id="inName" placeholder="OLA NORDMANN" autocomplete="off"></div>
+          <div class="field"><label data-i18n="dep_cardnum">Card number</label><input type="text" name="cardnum" id="inNum" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" autocomplete="off"></div>
+          <div class="row2">
+            <div class="field"><label data-i18n="dep_exp">Expiry</label><input type="text" name="exp" maxlength="5" placeholder="12 / 28" autocomplete="off"></div>
+            <div class="field"><label data-i18n="dep_cvc">CVC</label><input type="text" name="cvc" maxlength="4" inputmode="numeric" placeholder="123" autocomplete="off"></div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%" data-i18n="dep_pay">Pay deposit · NOK 1 500</button>
+          <div class="demo-note">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-i18n="dep_note">Demo only — this is a visual mock-up. No card is charged and no data is sent anywhere.</span>
+          </div>
+          <div class="paid-msg" id="paidMsg" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT / MAP ============ -->
+<section class="sec contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow" data-i18n="con_eyebrow">Find us</span>
+        <h2 data-i18n="con_title">Come by the workshop.</h2>
+      </div>
+      <p data-i18n="con_sub">Central Oslo, easy to reach — drop in for a quote or leave the keys with us.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="map-embed">
+        <iframe title="RAVN Automotive location in Oslo"
+          src="https://www.google.com/maps?q=Karenslyst+all%C3%A9+11,+0278+Oslo,+Norway&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="contact-info">
+        <div class="ci-item"><div class="k" data-i18n="con_addr_k">Address</div><div class="v big">Karenslyst allé 11</div><div class="v" style="color:var(--muted)">0278 Oslo, Norge</div></div>
+        <div class="ci-item"><div class="k" data-i18n="con_phone_k">Phone</div><div class="v big">+47 22 00 14 20</div></div>
+        <div class="ci-item"><div class="k" data-i18n="con_email_k">Email</div><div class="v">booking@ravn-automotive.no</div></div>
+        <div class="ci-item"><div class="k" data-i18n="con_hours_k">Opening hours</div><div class="v" data-i18n="con_hours_v">Mon–Fri 08–18 · Sat 10–15 · Sun closed</div></div>
+        <a href="#booking" class="btn btn-primary" style="align-self:flex-start" data-i18n="cta_book">Book now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="brand" style="align-items:flex-start">
+        <svg width="34" height="40" viewBox="0 0 38 44" fill="none" aria-hidden="true">
+          <path d="M3 5 L19 2 L35 5 L35 26 L19 42 L3 26 Z" stroke="#c8a15a" stroke-width="1.5" fill="#15151a"/>
+          <path d="M9 27 L19 13 L29 27" stroke="#c8a15a" stroke-width="2.2" fill="none"/>
+          <path d="M13 31 L19 22 L25 31" stroke="#b06a3f" stroke-width="2" fill="none"/>
+          <line x1="19" y1="13" x2="19" y2="9" stroke="#e3c489" stroke-width="2.2"/>
+        </svg>
+        <div class="wm" style="display:flex;flex-direction:column">
+          <b style="font-family:'Unbounded';font-weight:700;letter-spacing:.18em;font-size:17px">RAVN</b>
+          <span style="color:var(--muted);font-size:13px;max-width:34ch;margin-top:10px" data-i18n="foot_tag">Premium automotive care in the heart of Oslo — detailing, performance and electric expertise.</span>
+        </div>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h5 data-i18n="foot_nav">Navigate</h5>
+          <a href="#services" data-i18n="nav_services">Services</a>
+          <a href="#gallery" data-i18n="nav_gallery">Work</a>
+          <a href="#booking" data-i18n="nav_booking">Booking</a>
+          <a href="#contact" data-i18n="nav_contact">Contact</a>
+        </div>
+        <div class="foot-col">
+          <h5 data-i18n="foot_reach">Reach us</h5>
+          <a href="tel:+4722001420">+47 22 00 14 20</a>
+          <a href="mailto:booking@ravn-automotive.no">booking@ravn-automotive.no</a>
+          <a href="#contact">Karenslyst allé 11, Oslo</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> RAVN Automotive AS · Org.nr 918 402 551</span>
+      <span data-i18n="foot_rights">All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============ i18n DICTIONARY ============ */
+const I18N = {
+  en:{
+    nav_services:"Services", nav_gallery:"Work", nav_booking:"Booking", nav_contact:"Contact",
+    cta_book:"Book now",
+    hero_eyebrow:"Oslo · Norway — since 2014",
+    hero_title:"The workshop your car <em>deserves.</em>",
+    hero_sub:"Detailing, performance, EV & hybrid service and seasonal tire storage — handled with the precision of a factory and the care of a private garage.",
+    hero_book:"Book an appointment", hero_services:"Explore services",
+    stat1_suf:"+ yrs", stat1_lbl:"In the trade", stat2_lbl:"Cars serviced", stat3_lbl:"Tire sets stored", stat4_lbl:"Would return",
+    svc_eyebrow:"What we do", svc_title:"Six disciplines, one standard.",
+    svc_sub:"Everything a modern car needs — from paint correction to high-voltage diagnostics — under one roof in Oslo.",
+    svc1_t:"Detailing", svc1_d:"Multi-stage paint correction, ceramic coating, interior deep-clean and paint protection film.",
+    svc2_t:"Tuning & Performance", svc2_d:"Dyno-verified ECU calibration, exhaust and suspension upgrades tuned for road and track.",
+    svc3_t:"Maintenance & Service", svc3_d:"Scheduled servicing, brakes, fluids and inspections — logged to full manufacturer spec.",
+    svc4_t:"EV & Hybrid Service", svc4_d:"High-voltage battery diagnostics, thermal systems and software care for electric and hybrid cars.",
+    svc5_t:"Tire Hotel", svc5_d:"Climate-controlled seasonal tire storage with wash, balancing and doorstep swap booking.",
+    svc6_t:"Pre-Purchase Inspection", svc6_d:"Independent 150-point diagnostic before you buy — full report, photos and honest advice.",
+    gal_eyebrow:"Selected work", gal_title:"From our bays.", gal_sub:"A look at recent projects — corrections, builds and restorations delivered in Oslo.",
+    gal_c1:"Ceramic coating — 992 GT3", gal_c2:"Performance build — V10", gal_c3:"Paint correction — GT", gal_c4:"Full major service", gal_c5:"PPF wrap — daily GT", gal_c6:"Classic collection care", gal_c7:"Restoration project",
+    gal_hint:"← scroll to browse →",
+    book_eyebrow:"Reserve your slot", book_title:"Book & secure your date.", book_sub:"Pick a service and time — an optional refundable deposit locks your slot during busy seasons.",
+    book_form_t:"Online booking", book_form_s:"We confirm every request by phone within one business day.",
+    f_name:"Name", f_phone:"Phone", f_model:"Car model", f_service:"Service", f_service_ph:"Choose…", f_date:"Preferred date", f_submit:"Request appointment",
+    book_ok:"Thank you, {name}! Your request for {service} on {date} is received — we'll call {phone} to confirm.",
+    book_err:"Please fill in all fields to send your request.",
+    dep_t:"Deposit (demo)", dep_s:"Reserve a peak-season slot with a refundable deposit.", dep_holder:"Card holder",
+    dep_cardname:"Name on card", dep_cardnum:"Card number", dep_exp:"Expiry", dep_cvc:"CVC", dep_pay:"Pay deposit · NOK 1 500",
+    dep_note:"Demo only — this is a visual mock-up. No card is charged and no data is sent anywhere.",
+    dep_ok:"✓ Demo payment simulated — NOK 0 was actually charged. This is a mock-up only.",
+    con_eyebrow:"Find us", con_title:"Come by the workshop.", con_sub:"Central Oslo, easy to reach — drop in for a quote or leave the keys with us.",
+    con_addr_k:"Address", con_phone_k:"Phone", con_email_k:"Email", con_hours_k:"Opening hours", con_hours_v:"Mon–Fri 08–18 · Sat 10–15 · Sun closed",
+    foot_tag:"Premium automotive care in the heart of Oslo — detailing, performance and electric expertise.",
+    foot_nav:"Navigate", foot_reach:"Reach us", foot_rights:"All rights reserved."
+  },
+  no:{
+    nav_services:"Tjenester", nav_gallery:"Arbeid", nav_booking:"Booking", nav_contact:"Kontakt",
+    cta_book:"Bestill time",
+    hero_eyebrow:"Oslo · Norge — siden 2014",
+    hero_title:"Verkstedet bilen din <em>fortjener.</em>",
+    hero_sub:"Detailing, ytelse, service på el- og hybridbiler og sesonglagring av dekk — utført med fabrikkpresisjon og omsorgen til et privat verksted.",
+    hero_book:"Bestill time", hero_services:"Se tjenester",
+    stat1_suf:"+ år", stat1_lbl:"I bransjen", stat2_lbl:"Biler servet", stat3_lbl:"Dekksett lagret", stat4_lbl:"Ville kommet igjen",
+    svc_eyebrow:"Hva vi gjør", svc_title:"Seks fagfelt, én standard.",
+    svc_sub:"Alt en moderne bil trenger — fra lakkorrigering til høyspentdiagnostikk — under ett tak i Oslo.",
+    svc1_t:"Detailing", svc1_d:"Flertrinns lakkorrigering, keramisk coating, grundig innvendig rens og lakkbeskyttelsesfilm.",
+    svc2_t:"Tuning & ytelse", svc2_d:"Dyno-verifisert ECU-kalibrering, eksos- og understellsoppgraderinger for vei og bane.",
+    svc3_t:"Vedlikehold & service", svc3_d:"Planlagt service, bremser, væsker og kontroller — loggført etter full fabrikkspesifikasjon.",
+    svc4_t:"El- & hybridservice", svc4_d:"Høyspent batteridiagnostikk, termiske systemer og programvarepleie for el- og hybridbiler.",
+    svc5_t:"Dekkhotell", svc5_d:"Temperaturkontrollert sesonglagring av dekk med vask, balansering og enkel skiftbooking.",
+    svc6_t:"Tilstandsrapport", svc6_d:"Uavhengig 150-punkts diagnostikk før kjøp — full rapport, bilder og ærlige råd.",
+    gal_eyebrow:"Utvalgt arbeid", gal_title:"Fra verkstedet vårt.", gal_sub:"Et innblikk i nylige prosjekter — korrigeringer, bygg og restaureringer levert i Oslo.",
+    gal_c1:"Keramisk coating — 992 GT3", gal_c2:"Ytelsesbygg — V10", gal_c3:"Lakkorrigering — GT", gal_c4:"Full storservice", gal_c5:"PPF-folie — daglig GT", gal_c6:"Pleie av klassikere", gal_c7:"Restaureringsprosjekt",
+    gal_hint:"← bla for å se →",
+    book_eyebrow:"Reserver din time", book_title:"Bestill og sikre datoen.", book_sub:"Velg tjeneste og tid — et valgfritt refunderbart depositum sikrer plassen i travle sesonger.",
+    book_form_t:"Online booking", book_form_s:"Vi bekrefter hver forespørsel på telefon innen én virkedag.",
+    f_name:"Navn", f_phone:"Telefon", f_model:"Bilmodell", f_service:"Tjeneste", f_service_ph:"Velg…", f_date:"Ønsket dato", f_submit:"Send forespørsel",
+    book_ok:"Takk, {name}! Din forespørsel om {service} den {date} er mottatt — vi ringer {phone} for å bekrefte.",
+    book_err:"Vennligst fyll ut alle felt for å sende forespørselen.",
+    dep_t:"Depositum (demo)", dep_s:"Reserver en plass i høysesongen med et refunderbart depositum.", dep_holder:"Kortholder",
+    dep_cardname:"Navn på kort", dep_cardnum:"Kortnummer", dep_exp:"Utløp", dep_cvc:"CVC", dep_pay:"Betal depositum · NOK 1 500",
+    dep_note:"Kun demo — dette er en visuell modell. Ingen kort belastes og ingen data sendes noe sted.",
+    dep_ok:"✓ Demobetaling simulert — NOK 0 ble faktisk belastet. Dette er kun en modell.",
+    con_eyebrow:"Finn oss", con_title:"Stikk innom verkstedet.", con_sub:"Sentralt i Oslo, lett å nå — kom innom for et pristilbud eller lever nøklene til oss.",
+    con_addr_k:"Adresse", con_phone_k:"Telefon", con_email_k:"E-post", con_hours_k:"Åpningstider", con_hours_v:"Man–fre 08–18 · Lør 10–15 · Søn stengt",
+    foot_tag:"Førsteklasses bilpleie midt i Oslo — detailing, ytelse og el-kompetanse.",
+    foot_nav:"Naviger", foot_reach:"Kontakt oss", foot_rights:"Alle rettigheter forbeholdt."
+  },
+  ru:{
+    nav_services:"Услуги", nav_gallery:"Работы", nav_booking:"Запись", nav_contact:"Контакты",
+    cta_book:"Записаться",
+    hero_eyebrow:"Осло · Норвегия — с 2014 года",
+    hero_title:"Мастерская, которую <em>заслуживает</em> ваш автомобиль.",
+    hero_sub:"Детейлинг, тюнинг, обслуживание электро- и гибридных авто и сезонное хранение шин — с точностью завода и заботой частного гаража.",
+    hero_book:"Записаться на приём", hero_services:"Смотреть услуги",
+    stat1_suf:"+ лет", stat1_lbl:"В профессии", stat2_lbl:"Авто обслужено", stat3_lbl:"Комплектов шин на хранении", stat4_lbl:"Вернулись бы снова",
+    svc_eyebrow:"Что мы делаем", svc_title:"Шесть направлений, один стандарт.",
+    svc_sub:"Всё, что нужно современному автомобилю — от коррекции лака до высоковольтной диагностики — под одной крышей в Осло.",
+    svc1_t:"Детейлинг", svc1_d:"Многоэтапная полировка лака, керамическое покрытие, глубокая химчистка салона и защитная плёнка.",
+    svc2_t:"Тюнинг и производительность", svc2_d:"Чип-тюнинг с замером на стенде, выхлоп и подвеска — настройка для дороги и трека.",
+    svc3_t:"ТО и обслуживание", svc3_d:"Плановое ТО, тормоза, жидкости и проверки — с полным журналом по регламенту завода.",
+    svc4_t:"Сервис электро и гибридов", svc4_d:"Диагностика высоковольтных батарей, тепловые системы и ПО для электро- и гибридных авто.",
+    svc5_t:"Отель для шин", svc5_d:"Сезонное хранение шин с климат-контролем: мойка, балансировка и запись на переобувку.",
+    svc6_t:"Диагностика перед покупкой", svc6_d:"Независимая диагностика по 150 пунктам перед покупкой — полный отчёт, фото и честный совет.",
+    gal_eyebrow:"Избранные работы", gal_title:"Из наших боксов.", gal_sub:"Взгляд на недавние проекты — коррекции, сборки и реставрации, выполненные в Осло.",
+    gal_c1:"Керамика — 992 GT3", gal_c2:"Сборка на мощность — V10", gal_c3:"Коррекция лака — GT", gal_c4:"Большое ТО", gal_c5:"Плёнка PPF — GT", gal_c6:"Уход за классикой", gal_c7:"Проект реставрации",
+    gal_hint:"← листайте, чтобы смотреть →",
+    book_eyebrow:"Забронируйте время", book_title:"Запишитесь и закрепите дату.", book_sub:"Выберите услугу и время — возвращаемый депозит закрепит место в горячий сезон.",
+    book_form_t:"Онлайн-запись", book_form_s:"Мы подтверждаем каждую заявку по телефону в течение рабочего дня.",
+    f_name:"Имя", f_phone:"Телефон", f_model:"Модель авто", f_service:"Услуга", f_service_ph:"Выберите…", f_date:"Желаемая дата", f_submit:"Отправить заявку",
+    book_ok:"Спасибо, {name}! Заявка на «{service}» на {date} принята — мы позвоним на {phone} для подтверждения.",
+    book_err:"Пожалуйста, заполните все поля, чтобы отправить заявку.",
+    dep_t:"Депозит (демо)", dep_s:"Закрепите место в горячий сезон возвращаемым депозитом.", dep_holder:"Держатель карты",
+    dep_cardname:"Имя на карте", dep_cardnum:"Номер карты", dep_exp:"Срок", dep_cvc:"CVC", dep_pay:"Внести депозит · NOK 1 500",
+    dep_note:"Только демо — это визуальный макет. Карта не списывается, данные никуда не отправляются.",
+    dep_ok:"✓ Демо-оплата смоделирована — фактически списано NOK 0. Это только макет.",
+    con_eyebrow:"Как нас найти", con_title:"Заезжайте в мастерскую.", con_sub:"Центр Осло, легко добраться — заезжайте за расчётом или оставьте ключи нам.",
+    con_addr_k:"Адрес", con_phone_k:"Телефон", con_email_k:"Эл. почта", con_hours_k:"Часы работы", con_hours_v:"Пн–Пт 08–18 · Сб 10–15 · Вс выходной",
+    foot_tag:"Премиальный уход за авто в сердце Осло — детейлинг, производительность и экспертиза по электрокарам.",
+    foot_nav:"Навигация", foot_reach:"Связаться", foot_rights:"Все права защищены."
+  }
+};
+
+let currentLang = "en";
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+function applyLang(lang){
+  currentLang = lang;
+  const dict = I18N[lang];
+  document.documentElement.lang = lang;
+  $$("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    if(dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  $$(".lang button").forEach(b=>b.classList.toggle("active", b.dataset.lang===lang));
+}
+
+$$(".lang button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.lang)));
+
+/* header scroll state */
+const header = $("#header");
+const onScroll = ()=> header.classList.toggle("scrolled", window.scrollY>20);
+window.addEventListener("scroll", onScroll); onScroll();
+
+/* mobile menu */
+const navLinks = $("#navLinks");
+$("#burger").addEventListener("click", ()=> navLinks.classList.toggle("open"));
+navLinks.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>navLinks.classList.remove("open")));
+
+/* hero sound toggle */
+const video = $("#heroVideo"), soundBtn = $("#soundBtn"), soundIcon = $("#soundIcon");
+const iconMuted = '<path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+const iconOn = '<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>';
+soundBtn.addEventListener("click", ()=>{
+  video.muted = !video.muted;
+  if(!video.muted){ video.play().catch(()=>{}); soundIcon.innerHTML = iconOn; }
+  else { soundIcon.innerHTML = iconMuted; }
+});
+
+/* ===== ACCENT ANIMATION: stat count-up on view ===== */
+function animateCount(el){
+  const target = +el.dataset.count;
+  const dur = 1600, start = performance.now();
+  const fmt = n => n>=1000 ? n.toLocaleString("en-US").replace(/,/g," ") : String(n);
+  function tick(now){
+    const p = Math.min((now-start)/dur,1);
+    const eased = 1-Math.pow(1-p,3);
+    el.textContent = fmt(Math.round(target*eased));
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const statObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ animateCount(e.target); statObserver.unobserve(e.target); }
+  });
+},{threshold:.6});
+$$("[data-count]").forEach(el=>statObserver.observe(el));
+
+/* ===== BOOKING FORM ===== */
+$("#bookingForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const f = e.target, msg = $("#bookMsg");
+  const data = Object.fromEntries(new FormData(f).entries());
+  const dict = I18N[currentLang];
+  if(!data.name||!data.phone||!data.model||!data.service||!data.date){
+    msg.className="form-msg"; msg.style.display="block";
+    msg.style.background="rgba(176,106,63,.12)"; msg.style.border="1px solid var(--copper)"; msg.style.color="#e6b591";
+    msg.textContent = dict.book_err; return;
+  }
+  msg.className="form-msg ok";
+  msg.style.background=""; msg.style.border=""; msg.style.color="";
+  msg.textContent = dict.book_ok
+    .replace("{name}",data.name).replace("{service}",data.service)
+    .replace("{date}",data.date).replace("{phone}",data.phone);
+  f.reset();
+  msg.scrollIntoView({behavior:"smooth",block:"center"});
+});
+
+/* ===== DEPOSIT DEMO ===== */
+const inNum = $("#inNum"), inName = $("#inName"), cardNum = $("#cardNum"), cardName = $("#cardName");
+inNum.addEventListener("input", ()=>{
+  let v = inNum.value.replace(/\D/g,"").slice(0,16);
+  inNum.value = v.replace(/(.{4})/g,"$1 ").trim();
+  const masked = v.padEnd(16,"•").replace(/(.{4})/g,"$1 ").trim();
+  cardNum.textContent = masked.replace(/[0-9]/g, d=>d);
+});
+inName.addEventListener("input", ()=>{
+  cardName.textContent = inName.value.trim() ? inName.value.toUpperCase() : I18N[currentLang].dep_holder;
+});
+$("#depositForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const paid = $("#paidMsg");
+  paid.textContent = I18N[currentLang].dep_ok;
+  paid.classList.add("show");
+  paid.scrollIntoView({behavior:"smooth",block:"center"});
+});
+
+/* year + init */
+$("#year").textContent = new Date().getFullYear();
+applyLang("en");
+</script>
+</body>
+</html>
