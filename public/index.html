@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RAVN Automotive — Detailing · Performance · EV Service · Oslo</title>
+<meta name="description" content="RAVN Automotive — premium detailing, performance tuning, EV & hybrid service, mechanical repairs, tire hotel and pre-purchase diagnostics in Oslo, Norway." />
+<meta name="theme-color" content="#0f0f12" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!--
+  ===== ROUTING NOTE =====
+  This site is a single static file deployed to GitHub Pages under a base path (/RAVN-AUTO/).
+  GitHub Pages cannot serve arbitrary server routes, so navigation uses HASH-BASED client
+  routing (#/services/detailing, #/booking, ...). This is base-path independent, never 404s,
+  and works identically in local preview and on GitHub Pages. All internal links are hashes
+  and all assets use absolute URLs, so nothing depends on the /RAVN-AUTO/ prefix.
+
+  ===== LOGO EXPLORATION (art direction notes) =====
+  CHOSEN: angular RA crest / raven-wing chevron locked up with the tracked wordmark.
+-->
+
+<style>
+  :root{
+    --bg:#0f0f12;
+    --bg-2:#15151a;
+    --surface:#191921;
+    --surface-2:#1f2029;
+    --line:#2a2b35;
+    --text:#ece9e1;
+    --muted:#928f87;
+    --brass:#c8a15a;
+    --brass-2:#e3c489;
+    --copper:#b06a3f;
+    --radius:14px;
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;background:var(--bg)}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Golos Text",system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.font-display{font-family:"Unbounded",system-ui,sans-serif;line-height:1.05;font-weight:700}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  section{scroll-margin-top:84px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    font-family:"Golos Text",sans-serif;font-weight:600;font-size:12px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--brass);display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--brass);opacity:.7}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-family:"Golos Text",sans-serif;font-weight:600;font-size:14px;letter-spacing:.02em;
+    padding:13px 22px;border-radius:10px;border:1px solid transparent;cursor:pointer;
+    transition:transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+  }
+  .btn-primary{background:var(--brass);color:#171410;border-color:var(--brass)}
+  .btn-primary:hover{background:var(--brass-2);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--brass);color:var(--brass);transform:translateY(-2px)}
+
+  /* ===== HEADER ===== */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:background .3s ease, border-color .3s ease, backdrop-filter .3s;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{background:rgba(15,15,18,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand svg{flex:none}
+  .brand .wm{display:flex;flex-direction:column;line-height:1}
+  .brand .wm b{font-family:"Unbounded";font-weight:700;font-size:18px;letter-spacing:.18em;color:var(--text)}
+  .brand .wm span{font-size:9px;letter-spacing:.42em;color:var(--muted);margin-top:5px;text-transform:uppercase}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .18s;position:relative;cursor:pointer}
+  .nav-links a:hover{color:var(--text)}
+  .nav-actions{display:flex;align-items:center;gap:16px}
+  .lang{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .lang button{
+    background:transparent;border:none;color:var(--muted);cursor:pointer;
+    font-family:"Golos Text";font-weight:600;font-size:12px;letter-spacing:.05em;
+    padding:8px 11px;transition:background .18s,color .18s;
+  }
+  .lang button.active{background:var(--brass);color:#171410}
+  .lang button:not(.active):hover{color:var(--text)}
+  .burger{display:none;background:none;border:1px solid var(--line);border-radius:9px;padding:9px;cursor:pointer}
+  .burger span{display:block;width:20px;height:2px;background:var(--text);margin:3px 0}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+  .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .hero .veil{
+    position:absolute;inset:0;z-index:1;
+    background:
+      linear-gradient(180deg, rgba(15,15,18,.55) 0%, rgba(15,15,18,.15) 35%, rgba(15,15,18,.75) 78%, var(--bg) 100%),
+      linear-gradient(90deg, rgba(15,15,18,.7) 0%, rgba(15,15,18,0) 60%);
+  }
+  .hero-inner{position:relative;z-index:2;width:100%;padding-bottom:60px;padding-top:120px}
+  .hero h1{font-size:clamp(40px,7vw,88px);font-weight:800;letter-spacing:-.01em;margin:18px 0 0;max-width:14ch}
+  .hero h1 em{font-style:normal;color:var(--brass)}
+  .hero p{color:var(--text);opacity:.86;font-size:clamp(15px,1.6vw,19px);max-width:52ch;margin-top:20px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  .sound-btn{
+    position:absolute;right:24px;bottom:36px;z-index:3;
+    width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
+    background:rgba(15,15,18,.6);backdrop-filter:blur(6px);color:var(--text);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;
+  }
+  .sound-btn:hover{border-color:var(--brass);color:var(--brass)}
+
+  /* ===== STATS ===== */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .stat{padding:34px 24px;border-left:1px solid var(--line)}
+  .stat:first-child{border-left:none}
+  .stat .num{font-family:"Unbounded";font-weight:700;font-size:clamp(30px,4vw,46px);color:var(--text)}
+  .stat .num .suf{color:var(--brass)}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:6px;letter-spacing:.02em}
+
+  /* ===== SECTION HEADS ===== */
+  .sec{padding:96px 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:44px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(28px,4vw,46px);font-weight:700;letter-spacing:-.01em;max-width:16ch}
+  .sec-head p{color:var(--muted);max-width:42ch;font-size:15px}
+
+  /* ===== SERVICES ===== */
+  .services{background:var(--bg)}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .svc{
+    padding:34px 30px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--surface);position:relative;transition:background .25s ease;min-height:230px;
+    display:flex;flex-direction:column;color:inherit;
+  }
+  .svc-grid .svc:nth-child(3n){border-right:none}
+  .svc-grid .svc:nth-last-child(-n+3){border-bottom:none}
+  .svc:hover{background:var(--surface-2)}
+  .svc .no{font-family:"Unbounded";font-size:12px;color:var(--muted);letter-spacing:.1em}
+  .svc .ic{margin:0 0 auto;color:var(--brass)}
+  .svc h3{font-size:20px;font-weight:600;margin:20px 0 10px;letter-spacing:.01em}
+  .svc p{color:var(--muted);font-size:14px}
+  .svc .more{margin-top:16px;font-size:13px;font-weight:600;color:var(--brass);display:inline-flex;align-items:center;gap:6px;opacity:.8;transition:gap .2s,opacity .2s}
+  .svc:hover .more{opacity:1;gap:11px}
+  .svc::after{content:"";position:absolute;left:0;top:0;height:2px;width:0;background:var(--brass);transition:width .3s ease}
+  .svc:hover::after{width:100%}
+
+  /* ===== GALLERY ===== */
+  .gallery{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+  .rail{display:flex;gap:18px;overflow-x:auto;padding:6px 24px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .rail::-webkit-scrollbar{height:6px}
+  .rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .rail::-webkit-scrollbar-thumb:hover{background:var(--brass)}
+  .shot{flex:0 0 auto;width:min(420px,80vw);aspect-ratio:4/3;border-radius:12px;overflow:hidden;scroll-snap-align:start;position:relative;border:1px solid var(--line);cursor:pointer;text-align:left;padding:0;background:none;color:inherit;font:inherit}
+  .shot img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;filter:saturate(.92)}
+  .shot:hover img{transform:scale(1.06)}
+  .shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;font-size:13px;font-weight:600;letter-spacing:.02em;background:linear-gradient(0deg,rgba(15,15,18,.92),transparent);display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .shot figcaption .view{color:var(--brass);font-size:12px;opacity:0;transition:opacity .2s}
+  .shot:hover figcaption .view{opacity:1}
+  .rail-hint{color:var(--muted);font-size:12px;letter-spacing:.05em;padding:0 24px;margin-top:14px}
+
+  /* ===== BOOKING CTA BAND (home) ===== */
+  .book-band{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .book-band .inner{display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap;padding:64px 0}
+  .book-band h2{font-size:clamp(26px,4vw,42px);max-width:18ch}
+  .book-band p{color:var(--muted);margin-top:14px;max-width:46ch;font-size:15px}
+
+  /* ===== PANEL / FORMS ===== */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:32px}
+  .panel h3{font-size:22px;font-weight:600;margin-bottom:4px}
+  .panel .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--text);
+    font-family:"Golos Text";font-size:15px;padding:12px 14px;transition:border-color .18s;
+  }
+  .field textarea{min-height:110px;resize:vertical;line-height:1.5}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brass)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-msg{margin-top:8px;padding:14px 16px;border-radius:10px;font-size:14px;font-weight:500;display:none}
+  .form-msg.ok{display:block;background:rgba(200,161,90,.12);border:1px solid var(--brass);color:var(--brass-2)}
+  .form-msg.err{display:block;background:rgba(176,106,63,.14);border:1px solid var(--copper);color:#e6b591}
+
+  /* ===== CONTACT / MAP ===== */
+  .contact{background:var(--bg)}
+  .contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .map-embed{min-height:420px;height:100%}
+  .map-embed iframe{width:100%;height:100%;min-height:420px;border:0;filter:grayscale(.4) invert(.9) hue-rotate(180deg) contrast(.9)}
+  .contact-info{padding:40px;background:var(--surface);display:flex;flex-direction:column;gap:24px}
+  .ci-item .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+  .ci-item .v{font-size:16px;color:var(--text)}
+  .ci-item a.v{transition:color .18s}
+  .ci-item a.v:hover{color:var(--brass)}
+  .ci-item .v.big{font-family:"Unbounded";font-size:20px;font-weight:600}
+
+  /* ===== SUBPAGES (service + booking) ===== */
+  .subpage{padding-top:120px;padding-bottom:90px;min-height:100svh}
+  .crumb{font-size:13px;color:var(--muted);margin-bottom:24px;letter-spacing:.02em}
+  .crumb a:hover{color:var(--brass)}
+  .crumb span{color:var(--text)}
+  .sp-title{font-size:clamp(34px,6vw,64px);font-weight:800;letter-spacing:-.01em;margin:16px 0 0}
+  .sp-tagline{color:var(--brass-2);font-size:clamp(16px,2vw,20px);margin-top:14px;max-width:46ch}
+  .sp-grid{display:grid;grid-template-columns:1fr 340px;gap:40px;margin-top:48px;align-items:start}
+  .sp-intro{font-size:17px;color:var(--text);opacity:.9;max-width:62ch;margin-bottom:40px}
+  .sp-h{font-size:22px;font-weight:600;margin:36px 0 18px;letter-spacing:.01em}
+  .sp-h:first-of-type{margin-top:0}
+  ul.ticks{list-style:none;display:grid;gap:12px}
+  ul.ticks li{position:relative;padding-left:30px;color:var(--text);opacity:.92;font-size:15px}
+  ul.ticks li::before{
+    content:"";position:absolute;left:0;top:7px;width:14px;height:9px;
+    border-left:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(-45deg);
+  }
+  /* sidebar card */
+  .sp-card{position:sticky;top:96px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .sp-price-k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .sp-price{font-family:"Unbounded";font-weight:700;font-size:30px;color:var(--brass);margin:6px 0 20px}
+  .sp-meta{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--line);font-size:14px}
+  .sp-meta span{color:var(--muted)}
+  .sp-meta b{color:var(--text);font-weight:600;text-align:right}
+  .sp-disc{font-size:12.5px;color:var(--muted);margin:16px 0 20px;line-height:1.5}
+  /* repair price list */
+  .repair{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:4px}
+  .repair-head,.repair-row{display:grid;grid-template-columns:1fr 110px 120px;gap:14px;padding:16px 18px;align-items:center}
+  .repair-head{background:var(--bg-2);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .repair-row{border-top:1px solid var(--line)}
+  .repair-row:hover{background:var(--surface-2)}
+  .repair-row b{font-size:15px;font-weight:600;display:block}
+  .repair-row small{color:var(--muted);font-size:13px;display:block;margin-top:3px}
+  .repair-row span{font-size:13.5px;color:var(--text)}
+  .repair-row span:last-child{color:var(--brass-2);font-weight:600}
+  /* faq */
+  .faq details{border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden;background:var(--surface)}
+  .faq summary{cursor:pointer;padding:18px 20px;font-weight:600;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-family:"Unbounded";color:var(--brass);font-size:20px;transition:transform .2s}
+  .faq details[open] summary::after{transform:rotate(45deg)}
+  .faq details p{padding:0 20px 20px;color:var(--muted);font-size:14.5px;line-height:1.6}
+  /* subpage cta band */
+  .cta-band{margin-top:64px;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .cta-band h3{font-size:24px;font-weight:700}
+  .cta-band p{color:var(--muted);margin-top:8px;font-size:14px}
+
+  /* ===== BOOKING PAGE ===== */
+  .notice{display:flex;gap:11px;align-items:flex-start;background:rgba(200,161,90,.08);border:1px solid rgba(200,161,90,.35);border-radius:10px;padding:14px 16px;margin:26px 0 30px;font-size:13.5px;color:var(--brass-2)}
+  .notice svg{flex:none;margin-top:2px}
+  .ok-panel{text-align:center;padding:48px 32px}
+  .ok-ic{width:56px;height:56px;border-radius:50%;background:rgba(200,161,90,.14);border:1px solid var(--brass);color:var(--brass);display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+  .ok-panel h3{font-size:24px;margin-bottom:12px}
+  .ok-panel p{color:var(--muted);max-width:46ch;margin:0 auto 10px;font-size:15px}
+  .ok-panel .notice-inline{color:var(--brass-2);font-size:13px;margin-top:6px}
+  .ok-panel .btn{margin-top:22px}
+
+  /* ===== MODAL ===== */
+  .modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(8,8,11,.82);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);max-width:760px;width:100%;max-height:90svh;overflow:auto;position:relative}
+  .modal img{width:100%;aspect-ratio:16/9;object-fit:cover}
+  .modal-body{padding:32px}
+  .modal .m-cat{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+  .modal h3{font-size:26px;margin:10px 0 18px}
+  .modal .m-meta{display:flex;gap:26px;flex-wrap:wrap;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+  .modal .m-meta .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .modal .m-meta .val{font-size:15px;font-weight:600}
+  .modal .m-desc{color:var(--text);opacity:.9;font-size:15px;margin-bottom:22px}
+  .modal .m-h{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+  .modal .m-result{margin-top:22px;padding:16px 18px;border-radius:10px;background:var(--bg-2);border:1px solid var(--line);font-size:14.5px}
+  .modal-close{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:rgba(15,15,18,.7);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s}
+  .modal-close:hover{border-color:var(--brass);color:var(--brass)}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--bg-2);border-top:1px solid var(--line);padding:54px 0 30px}
+  .foot-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;margin-bottom:36px}
+  .foot-links{display:flex;gap:40px;flex-wrap:wrap}
+  .foot-col h5{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-family:"Golos Text";font-weight:600}
+  .foot-col a{display:block;color:var(--text);opacity:.75;font-size:14px;margin-bottom:9px;transition:opacity .18s,color .18s;cursor:pointer}
+  .foot-col a:hover{opacity:1;color:var(--brass)}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+
+  /* ===== MOBILE ===== */
+  @media (max-width:900px){
+    .contact-grid{grid-template-columns:1fr}
+    .svc-grid{grid-template-columns:repeat(2,1fr)}
+    .svc-grid .svc:nth-child(3n){border-right:1px solid var(--line)}
+    .svc-grid .svc:nth-child(2n){border-right:none}
+    .svc-grid .svc:nth-last-child(-n+3){border-bottom:1px solid var(--line)}
+    .svc-grid .svc:nth-last-child(-n+2){border-bottom:none}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(3){border-left:none}
+    .stat:nth-child(n+3){border-top:1px solid var(--line)}
+    .sp-grid{grid-template-columns:1fr}
+    .sp-card{position:static;order:-1}
+  }
+  @media (max-width:720px){
+    .nav-links{display:none}
+    .nav-links.open{
+      display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;
+      background:rgba(15,15,18,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+      padding:20px 24px;gap:18px;
+    }
+    .burger{display:block}
+    .cta-book-nav{display:none}
+    .sec{padding:70px 0}
+    .row2{grid-template-columns:1fr}
+    .repair-head{display:none}
+    .repair-row{grid-template-columns:1fr;gap:6px}
+    .repair-row span{color:var(--muted);font-size:13px}
+    .repair-row span:last-child{color:var(--brass-2)}
+  }
+  @media (max-width:480px){
+    .svc-grid{grid-template-columns:1fr}
+    .svc-grid .svc{border-right:none!important;border-bottom:1px solid var(--line)!important}
+    .svc-grid .svc:last-child{border-bottom:none!important}
+    .stats-grid{grid-template-columns:1fr}
+    .stat{border-left:none;border-top:1px solid var(--line)}
+    .stat:first-child{border-top:none}
+    .subpage{padding-top:100px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="header">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#/" aria-label="RAVN Automotive home">
+        <svg width="38" height="44" viewBox="0 0 38 44" fill="none" aria-hidden="true">
+          <path d="M3 5 L19 2 L35 5 L35 26 L19 42 L3 26 Z" stroke="#c8a15a" stroke-width="1.5" fill="#15151a"/>
+          <path d="M9 27 L19 13 L29 27" stroke="#c8a15a" stroke-width="2.2" stroke-linejoin="miter" fill="none"/>
+          <path d="M13 31 L19 22 L25 31" stroke="#b06a3f" stroke-width="2" stroke-linejoin="miter" fill="none"/>
+          <line x1="19" y1="13" x2="19" y2="9" stroke="#e3c489" stroke-width="2.2"/>
+        </svg>
+        <span class="wm"><b>RAVN</b><span>Automotive · Oslo</span></span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#services" data-i18n="nav_services">Services</a>
+        <a href="#gallery" data-i18n="nav_gallery">Work</a>
+        <a href="#/booking" data-i18n="nav_booking">Booking</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="lang" role="group" aria-label="Language">
+          <button data-lang="en" class="active">EN</button>
+          <button data-lang="no">NO</button>
+          <button data-lang="ru">RU</button>
+        </div>
+        <a href="#/booking" class="btn btn-primary cta-book-nav" data-i18n="cta_book">Book now</a>
+        <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="app">
+<!-- ============ HOME VIEW ============ -->
+<div id="view-home">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <video autoplay muted loop playsinline id="heroVideo"
+      poster="https://images.unsplash.com/photo-1623878404982-618f0f172fb3?q=80&w=1600">
+      <source src="https://assets.mixkit.co/videos/13179/13179-720.mp4" type="video/mp4" />
+      <source src="https://assets.mixkit.co/videos/13260/13260-720.mp4" type="video/mp4" />
+    </video>
+    <div class="veil"></div>
+
+    <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">
+      <svg id="soundIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    </button>
+
+    <div class="hero-inner">
+      <div class="wrap">
+        <span class="eyebrow" data-i18n="hero_eyebrow">Oslo · Norway — since 2014</span>
+        <h1 data-i18n="hero_title">The workshop your car <em>deserves.</em></h1>
+        <p data-i18n="hero_sub">Detailing, performance, EV & hybrid service, mechanical repairs and seasonal tire storage — handled with the precision of a factory and the care of a private garage.</p>
+        <div class="hero-cta">
+          <a href="#/booking" class="btn btn-primary" data-i18n="hero_book">Book an appointment</a>
+          <a href="#services" class="btn btn-ghost" data-i18n="hero_services">Explore services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="wrap" style="padding:0">
+      <div class="stats-grid">
+        <div class="stat"><div class="num"><span data-count="11">0</span><span class="suf" data-i18n="stat1_suf">+ yrs</span></div><div class="lbl" data-i18n="stat1_lbl">In the trade</div></div>
+        <div class="stat"><div class="num"><span data-count="9400">0</span><span class="suf">+</span></div><div class="lbl" data-i18n="stat2_lbl">Cars serviced</div></div>
+        <div class="stat"><div class="num"><span data-count="640">0</span></div><div class="lbl" data-i18n="stat3_lbl">Tire sets stored</div></div>
+        <div class="stat"><div class="num"><span data-count="98">0</span><span class="suf">%</span></div><div class="lbl" data-i18n="stat4_lbl">Would return</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="sec services" id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow" data-i18n="svc_eyebrow">What we do</span>
+          <h2 data-i18n="svc_title">Six disciplines, one standard.</h2>
+        </div>
+        <p data-i18n="svc_sub">Everything a modern car needs — from paint correction to real mechanical repairs — under one roof in Oslo.</p>
+      </div>
+
+      <div class="svc-grid">
+        <a class="svc" href="#/services/detailing">
+          <span class="no">01</span>
+          <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13l2-5a2 2 0 0 1 1.9-1.3h10.2A2 2 0 0 1 19 8l2 5"/><path d="M3 13v5m18-5v5M6 18h.01M18 18h.01M3 15h18"/></svg></div>
+          <h3 data-i18n="svc1_t">Detailing</h3>
+          <p data-i18n="svc1_d">Multi-stage paint correction, ceramic coating, interior deep-clean and paint protection film.</p>
+          <span class="more" data-i18n="sp_learn">Learn more →</span>
+        </a>
+        <a class="svc" href="#/services/performance">
+          <span class="no">02</span>
+          <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div>
+          <h3 data-i18n="svc2_t">Tuning & Performance</h3>
+          <p data-i18n="svc2_d">Dyno-verified ECU calibration, exhaust and suspension upgrades tuned for road and track.</p>
+          <span class="more" data-i18n="sp_learn">Learn more →</span>
+        </a>
+        <a class="svc" href="#/services/maintenance-repairs">
+          <span class="no">03</span>
+          <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6 2.6 2.6 6-6a4 4 0 0 0 5.4-5.4l-2.3 2.3-2.6-2.6z"/></svg></div>
+          <h3 data-i18n="svc3_t">Maintenance & Repairs</h3>
+          <p data-i18n="svc3_d">Periodic service and real repairs — brakes, battery, clutch, cooling, timing belt and diagnostics.</p>
+          <span class="more" data-i18n="sp_learn">Learn more →</span>
+        </a>
+        <a class="svc" href="#/services/ev-hybrid">
+          <span class="no">04</span>
+          <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/><circle cx="12" cy="12" r="10" opacity=".25"/></svg></div>
+          <h3 data-i18n="svc4_t">EV & Hybrid Service</h3>
+          <p data-i18n="svc4_d">High-voltage battery diagnostics, thermal systems and software care for electric and hybrid cars.</p>
+          <span class="more" data-i18n="sp_learn">Learn more →</span>
+        </a>
+        <a class="svc" href="#/services/tire-hotel">
+          <span class="no">05</span>
+          <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+          <h3 data-i18n="svc5_t">Tire Hotel</h3>
+          <p data-i18n="svc5_d">Climate-controlled seasonal tire storage with wash, balancing and doorstep swap booking.</p>
+          <span class="more" data-i18n="sp_learn">Learn more →</span>
+        </a>
+        <a class="svc" href="#/services/pre-purchase">
+          <span class="no">06</span>
+          <div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></div>
+          <h3 data-i18n="svc6_t">Pre-Purchase Inspection</h3>
+          <p data-i18n="svc6_d">Independent 150-point diagnostic before you buy — full report, photos and honest advice.</p>
+          <span class="more" data-i18n="sp_learn">Learn more →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="sec gallery" id="gallery" style="padding-left:0;padding-right:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow" data-i18n="gal_eyebrow">Selected work</span>
+          <h2 data-i18n="gal_title">From our bays.</h2>
+        </div>
+        <p data-i18n="gal_sub">A look at recent projects — corrections, builds and restorations delivered in Oslo.</p>
+      </div>
+    </div>
+    <div class="rail" id="rail"><!-- populated by JS --></div>
+    <p class="rail-hint" data-i18n="gal_hint">← scroll to browse · tap a project →</p>
+  </section>
+
+  <!-- BOOKING CTA BAND -->
+  <section class="sec book-band" id="book-cta">
+    <div class="wrap">
+      <div class="inner">
+        <div>
+          <span class="eyebrow" data-i18n="book_eyebrow">Reserve your slot</span>
+          <h2 data-i18n="book_title">Book your car in — we confirm the time.</h2>
+          <p data-i18n="book_sub">Send an appointment request in under a minute. Our team calls you back within one business day to confirm your date and time.</p>
+        </div>
+        <a href="#/booking" class="btn btn-primary" data-i18n="hero_book">Book an appointment</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / MAP -->
+  <section class="sec contact" id="contact">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow" data-i18n="con_eyebrow">Find us</span>
+          <h2 data-i18n="con_title">Come by the workshop.</h2>
+        </div>
+        <p data-i18n="con_sub">Central Oslo, easy to reach — drop in for a quote or leave the keys with us.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="map-embed">
+          <iframe title="RAVN Automotive location in Oslo"
+            src="https://www.google.com/maps?q=Karenslyst+all%C3%A9+11,+0278+Oslo,+Norway&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="contact-info">
+          <div class="ci-item">
+            <div class="k" data-i18n="con_addr_k">Address</div>
+            <a class="v big" href="https://www.google.com/maps/search/?api=1&query=Karenslyst+all%C3%A9+11+0278+Oslo" target="_blank" rel="noopener">Karenslyst allé 11</a>
+            <div class="v" style="color:var(--muted)">0278 Oslo, Norge</div>
+          </div>
+          <div class="ci-item"><div class="k" data-i18n="con_phone_k">Phone</div><a class="v big" href="tel:+4722001420">+47 22 00 14 20</a></div>
+          <div class="ci-item"><div class="k" data-i18n="con_email_k">Email</div><a class="v" href="mailto:booking@ravn-automotive.no">booking@ravn-automotive.no</a></div>
+          <div class="ci-item"><div class="k" data-i18n="con_hours_k">Opening hours</div><div class="v" data-i18n="con_hours_v">Mon–Fri 08–18 · Sat 10–15 · Sun closed</div></div>
+          <a href="#/booking" class="btn btn-primary" style="align-self:flex-start" data-i18n="cta_book">Book now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- /view-home -->
+
+<!-- ============ SUBPAGE VIEW (service / booking) ============ -->
+<div id="view-sub" style="display:none"></div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="brand" style="align-items:flex-start">
+        <svg width="34" height="40" viewBox="0 0 38 44" fill="none" aria-hidden="true">
+          <path d="M3 5 L19 2 L35 5 L35 26 L19 42 L3 26 Z" stroke="#c8a15a" stroke-width="1.5" fill="#15151a"/>
+          <path d="M9 27 L19 13 L29 27" stroke="#c8a15a" stroke-width="2.2" fill="none"/>
+          <path d="M13 31 L19 22 L25 31" stroke="#b06a3f" stroke-width="2" fill="none"/>
+          <line x1="19" y1="13" x2="19" y2="9" stroke="#e3c489" stroke-width="2.2"/>
+        </svg>
+        <div class="wm" style="display:flex;flex-direction:column">
+          <b style="font-family:'Unbounded';font-weight:700;letter-spacing:.18em;font-size:17px">RAVN</b>
+          <span style="color:var(--muted);font-size:13px;max-width:34ch;margin-top:10px" data-i18n="foot_tag">Premium automotive care in the heart of Oslo — detailing, performance and electric expertise.</span>
+        </div>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h5 data-i18n="foot_nav">Navigate</h5>
+          <a href="#services" data-i18n="nav_services">Services</a>
+          <a href="#gallery" data-i18n="nav_gallery">Work</a>
+          <a href="#/booking" data-i18n="nav_booking">Booking</a>
+          <a href="#contact" data-i18n="nav_contact">Contact</a>
+        </div>
+        <div class="foot-col">
+          <h5 data-i18n="foot_services_h">Services</h5>
+          <a href="#/services/detailing" data-i18n="svc1_t">Detailing</a>
+          <a href="#/services/maintenance-repairs" data-i18n="svc3_t">Maintenance & Repairs</a>
+          <a href="#/services/ev-hybrid" data-i18n="svc4_t">EV & Hybrid Service</a>
+          <a href="#/services/pre-purchase" data-i18n="svc6_t">Pre-Purchase Inspection</a>
+        </div>
+        <div class="foot-col">
+          <h5 data-i18n="foot_reach">Reach us</h5>
+          <a href="tel:+4722001420">+47 22 00 14 20</a>
+          <a href="mailto:booking@ravn-automotive.no">booking@ravn-automotive.no</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Karenslyst+all%C3%A9+11+0278+Oslo" target="_blank" rel="noopener">Karenslyst allé 11, Oslo</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> RAVN Automotive AS · Org.nr 918 402 551</span>
+      <span data-i18n="foot_rights">All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ PROJECT MODAL ============ -->
+<div class="modal-overlay" id="projectModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIG — where booking requests get emailed
+   ---------------------------------------------------------
+   Submissions are sent with FormSubmit (https://formsubmit.co) —
+   free, no account needed. Just put the destination inbox below.
+
+   ONE-TIME ACTIVATION: the very first time the form is submitted,
+   FormSubmit sends THAT inbox a confirmation email ("Please confirm
+   your FormSubmit request") — someone has to click the link inside
+   it once. Every submission after that lands straight in the inbox.
+   ========================================================= */
+const BOOKING_EMAIL = "booking@ravn-automotive.no"; // <-- replace with the real inbox
+const BOOKING_ENDPOINT = `https://formsubmit.co/ajax/${BOOKING_EMAIL}`;
+
+/* ============ i18n DICTIONARY (shared UI strings) ============ */
+const I18N = {
+  en:{
+    nav_services:"Services", nav_gallery:"Work", nav_booking:"Booking", nav_contact:"Contact",
+    cta_book:"Book now",
+    hero_eyebrow:"Oslo · Norway — since 2014",
+    hero_title:"The workshop your car <em>deserves.</em>",
+    hero_sub:"Detailing, performance, EV & hybrid service, mechanical repairs and seasonal tire storage — handled with the precision of a factory and the care of a private garage.",
+    hero_book:"Book an appointment", hero_services:"Explore services",
+    stat1_suf:"+ yrs", stat1_lbl:"In the trade", stat2_lbl:"Cars serviced", stat3_lbl:"Tire sets stored", stat4_lbl:"Would return",
+    svc_eyebrow:"What we do", svc_title:"Six disciplines, one standard.",
+    svc_sub:"Everything a modern car needs — from paint correction to real mechanical repairs — under one roof in Oslo.",
+    svc1_t:"Detailing", svc1_d:"Multi-stage paint correction, ceramic coating, interior deep-clean and paint protection film.",
+    svc2_t:"Tuning & Performance", svc2_d:"Dyno-verified ECU calibration, exhaust and suspension upgrades tuned for road and track.",
+    svc3_t:"Maintenance & Repairs", svc3_d:"Periodic service and real repairs — brakes, battery, clutch, cooling, timing belt and diagnostics.",
+    svc4_t:"EV & Hybrid Service", svc4_d:"High-voltage battery diagnostics, thermal systems and software care for electric and hybrid cars.",
+    svc5_t:"Tire Hotel", svc5_d:"Climate-controlled seasonal tire storage with wash, balancing and doorstep swap booking.",
+    svc6_t:"Pre-Purchase Inspection", svc6_d:"Independent 150-point diagnostic before you buy — full report, photos and honest advice.",
+    sp_learn:"Learn more →",
+    gal_eyebrow:"Selected work", gal_title:"From our bays.", gal_sub:"A look at recent projects — corrections, builds and restorations delivered in Oslo.",
+    gal_hint:"← scroll to browse · tap a project →",
+    book_eyebrow:"Reserve your slot", book_title:"Book your car in — we confirm the time.", book_sub:"Send an appointment request in under a minute. Our team calls you back within one business day to confirm your date and time.",
+    con_eyebrow:"Find us", con_title:"Come by the workshop.", con_sub:"Central Oslo, easy to reach — drop in for a quote or leave the keys with us.",
+    con_addr_k:"Address", con_phone_k:"Phone", con_email_k:"Email", con_hours_k:"Opening hours", con_hours_v:"Mon–Fri 08–18 · Sat 10–15 · Sun closed",
+    foot_tag:"Premium automotive care in the heart of Oslo — detailing, performance, repairs and electric expertise.",
+    foot_nav:"Navigate", foot_services_h:"Services", foot_reach:"Reach us", foot_rights:"All rights reserved.",
+
+    /* service page chrome */
+    sp_home:"Home", sp_services_bc:"Services",
+    sp_includes:"What's included", sp_usecases:"Typical use cases", sp_expect:"What to expect",
+    sp_pricelist:"Services & indicative prices", sp_faq:"Frequently asked questions",
+    sp_price:"Indicative price", sp_duration:"Typical turnaround",
+    sp_disclaimer:"Prices are indicative starting points. The final price depends on your vehicle, the parts required and the exact scope of work — you always get a clear quote before we begin.",
+    sp_book:"Book appointment", sp_back:"Back to services",
+    it_service:"Service", it_time:"Typical time", it_price:"From",
+    cta_h:"Ready to book this in?", cta_p:"Send a request and we'll confirm your time by phone.",
+
+    /* booking page */
+    bp_eyebrow:"Appointment request", bp_title:"Book your visit.", bp_sub:"Tell us about your car and what you need. We'll get back to you to confirm a time that works.",
+    bp_notice:"This is an appointment request — not an instant booking. The workshop confirms the final date and time with you.",
+    f_name:"Full name", f_phone:"Phone", f_email:"Email", f_make:"Vehicle make", f_model:"Vehicle model",
+    f_reg:"Registration no.", f_year:"Year", f_service:"Service", f_service_ph:"Choose a service…",
+    f_date:"Preferred date", f_time:"Preferred time", f_time_ph:"Choose…", f_msg:"Message / describe the problem", f_msg_ph:"Optional — anything we should know",
+    t_morning:"Morning (08–12)", t_midday:"Midday (12–15)", t_afternoon:"Afternoon (15–18)",
+    opt_diag:"Diagnostics", opt_brake:"Brake Service", opt_timing:"Timing Belt / Registerreim", opt_other:"Other Repair",
+    bp_submit:"Send appointment request", bp_sending:"Sending…",
+    bp_err:"Please fill in your name, phone, email, vehicle make, model, service and preferred date.",
+    bp_send_err:"Something went wrong sending your request. Please call us on +47 22 00 14 20 or try again.",
+    bp_ok_title:"Thanks — we've received your request.", bp_ok:"We'll contact you shortly to confirm the date and time. A copy of your request has been logged.",
+    bp_home_btn:"Back to home",
+
+    /* project modal */
+    pj_vehicle:"Vehicle", pj_service:"Service performed", pj_work:"Work completed", pj_result:"Result", pj_close:"Close"
+  },
+
+  no:{
+    nav_services:"Tjenester", nav_gallery:"Arbeid", nav_booking:"Booking", nav_contact:"Kontakt",
+    cta_book:"Bestill time",
+    hero_eyebrow:"Oslo · Norge — siden 2014",
+    hero_title:"Verkstedet bilen din <em>fortjener.</em>",
+    hero_sub:"Detailing, ytelse, service på el- og hybridbiler, mekaniske reparasjoner og sesonglagring av dekk — utført med fabrikkpresisjon og omsorgen til et privat verksted.",
+    hero_book:"Bestill time", hero_services:"Se tjenester",
+    stat1_suf:"+ år", stat1_lbl:"I bransjen", stat2_lbl:"Biler servet", stat3_lbl:"Dekksett lagret", stat4_lbl:"Ville kommet igjen",
+    svc_eyebrow:"Hva vi gjør", svc_title:"Seks fagfelt, én standard.",
+    svc_sub:"Alt en moderne bil trenger — fra lakkorrigering til ekte mekaniske reparasjoner — under ett tak i Oslo.",
+    svc1_t:"Detailing", svc1_d:"Flertrinns lakkorrigering, keramisk coating, grundig innvendig rens og lakkbeskyttelsesfilm.",
+    svc2_t:"Tuning & ytelse", svc2_d:"Dyno-verifisert ECU-kalibrering, eksos- og understellsoppgraderinger for vei og bane.",
+    svc3_t:"Vedlikehold & reparasjon", svc3_d:"Periodisk service og ekte reparasjoner — bremser, batteri, clutch, kjøling, registerreim og feilsøking.",
+    svc4_t:"El- & hybridservice", svc4_d:"Høyspent batteridiagnostikk, termiske systemer og programvarepleie for el- og hybridbiler.",
+    svc5_t:"Dekkhotell", svc5_d:"Temperaturkontrollert sesonglagring av dekk med vask, balansering og enkel skiftbooking.",
+    svc6_t:"Tilstandsrapport", svc6_d:"Uavhengig 150-punkts diagnostikk før kjøp — full rapport, bilder og ærlige råd.",
+    sp_learn:"Les mer →",
+    gal_eyebrow:"Utvalgt arbeid", gal_title:"Fra verkstedet vårt.", gal_sub:"Et innblikk i nylige prosjekter — korrigeringer, bygg og restaureringer levert i Oslo.",
+    gal_hint:"← bla for å se · trykk på et prosjekt →",
+    book_eyebrow:"Reserver din time", book_title:"Bestill bilen inn — vi bekrefter tiden.", book_sub:"Send en timeforespørsel på under ett minutt. Vi ringer deg tilbake innen én virkedag for å bekrefte dato og tid.",
+    con_eyebrow:"Finn oss", con_title:"Stikk innom verkstedet.", con_sub:"Sentralt i Oslo, lett å nå — kom innom for et pristilbud eller lever nøklene til oss.",
+    con_addr_k:"Adresse", con_phone_k:"Telefon", con_email_k:"E-post", con_hours_k:"Åpningstider", con_hours_v:"Man–fre 08–18 · Lør 10–15 · Søn stengt",
+    foot_tag:"Førsteklasses bilpleie midt i Oslo — detailing, ytelse, reparasjoner og el-kompetanse.",
+    foot_nav:"Naviger", foot_services_h:"Tjenester", foot_reach:"Kontakt oss", foot_rights:"Alle rettigheter forbeholdt.",
+
+    sp_home:"Hjem", sp_services_bc:"Tjenester",
+    sp_includes:"Dette inngår", sp_usecases:"Typiske behov", sp_expect:"Hva du kan forvente",
+    sp_pricelist:"Tjenester & veiledende priser", sp_faq:"Ofte stilte spørsmål",
+    sp_price:"Veiledende pris", sp_duration:"Typisk tidsbruk",
+    sp_disclaimer:"Prisene er veiledende startpriser. Endelig pris avhenger av bilen, nødvendige deler og eksakt omfang av arbeidet — du får alltid et tydelig tilbud før vi starter.",
+    sp_book:"Bestill time", sp_back:"Tilbake til tjenester",
+    it_service:"Tjeneste", it_time:"Typisk tid", it_price:"Fra",
+    cta_h:"Klar for å bestille dette?", cta_p:"Send en forespørsel, så bekrefter vi tiden på telefon.",
+
+    bp_eyebrow:"Timeforespørsel", bp_title:"Bestill besøket ditt.", bp_sub:"Fortell oss om bilen og hva du trenger. Vi kontakter deg for å bekrefte en tid som passer.",
+    bp_notice:"Dette er en forespørsel om time — ikke en umiddelbar bekreftet booking. Verkstedet bekrefter endelig dato og tidspunkt med deg.",
+    f_name:"Fullt navn", f_phone:"Telefon", f_email:"E-post", f_make:"Bilmerke", f_model:"Modell",
+    f_reg:"Reg.nr.", f_year:"Årsmodell", f_service:"Tjeneste", f_service_ph:"Velg en tjeneste…",
+    f_date:"Ønsket dato", f_time:"Ønsket tid", f_time_ph:"Velg…", f_msg:"Melding / beskriv problemet", f_msg_ph:"Valgfritt — noe vi bør vite",
+    t_morning:"Formiddag (08–12)", t_midday:"Midt på dagen (12–15)", t_afternoon:"Ettermiddag (15–18)",
+    opt_diag:"Feilsøking", opt_brake:"Bremseservice", opt_timing:"Registerreim", opt_other:"Annen reparasjon",
+    bp_submit:"Send timeforespørsel", bp_sending:"Sender…",
+    bp_err:"Fyll inn navn, telefon, e-post, bilmerke, modell, tjeneste og ønsket dato.",
+    bp_send_err:"Noe gikk galt under sendingen. Ring oss på +47 22 00 14 20 eller prøv igjen.",
+    bp_ok_title:"Takk — vi har mottatt forespørselen din.", bp_ok:"Vi kontakter deg snart for å bekrefte dato og tid. En kopi av forespørselen er registrert.",
+    bp_home_btn:"Tilbake til forsiden",
+
+    pj_vehicle:"Bil", pj_service:"Utført tjeneste", pj_work:"Utført arbeid", pj_result:"Resultat", pj_close:"Lukk"
+  },
+
+  ru:{
+    nav_services:"Услуги", nav_gallery:"Работы", nav_booking:"Запись", nav_contact:"Контакты",
+    cta_book:"Записаться",
+    hero_eyebrow:"Осло · Норвегия — с 2014 года",
+    hero_title:"Мастерская, которую <em>заслуживает</em> ваш автомобиль.",
+    hero_sub:"Детейлинг, тюнинг, обслуживание электро- и гибридных авто, механический ремонт и сезонное хранение шин — с точностью завода и заботой частного гаража.",
+    hero_book:"Записаться на приём", hero_services:"Смотреть услуги",
+    stat1_suf:"+ лет", stat1_lbl:"В профессии", stat2_lbl:"Авто обслужено", stat3_lbl:"Комплектов шин на хранении", stat4_lbl:"Вернулись бы снова",
+    svc_eyebrow:"Что мы делаем", svc_title:"Шесть направлений, один стандарт.",
+    svc_sub:"Всё, что нужно современному автомобилю — от коррекции лака до реального механического ремонта — под одной крышей в Осло.",
+    svc1_t:"Детейлинг", svc1_d:"Многоэтапная полировка лака, керамическое покрытие, глубокая химчистка салона и защитная плёнка.",
+    svc2_t:"Тюнинг и производительность", svc2_d:"Чип-тюнинг с замером на стенде, выхлоп и подвеска — настройка для дороги и трека.",
+    svc3_t:"ТО и ремонт", svc3_d:"Плановое ТО и реальный ремонт — тормоза, аккумулятор, сцепление, охлаждение, ремень ГРМ и диагностика.",
+    svc4_t:"Сервис электро и гибридов", svc4_d:"Диагностика высоковольтных батарей, тепловые системы и ПО для электро- и гибридных авто.",
+    svc5_t:"Отель для шин", svc5_d:"Сезонное хранение шин с климат-контролем: мойка, балансировка и запись на переобувку.",
+    svc6_t:"Диагностика перед покупкой", svc6_d:"Независимая диагностика по 150 пунктам перед покупкой — полный отчёт, фото и честный совет.",
+    sp_learn:"Подробнее →",
+    gal_eyebrow:"Избранные работы", gal_title:"Из наших боксов.", gal_sub:"Взгляд на недавние проекты — коррекции, сборки и реставрации, выполненные в Осло.",
+    gal_hint:"← листайте · нажмите на проект →",
+    book_eyebrow:"Забронируйте время", book_title:"Запишите авто — мы подтвердим время.", book_sub:"Отправьте заявку менее чем за минуту. Мы перезвоним в течение рабочего дня, чтобы подтвердить дату и время.",
+    con_eyebrow:"Как нас найти", con_title:"Заезжайте в мастерскую.", con_sub:"Центр Осло, легко добраться — заезжайте за расчётом или оставьте ключи нам.",
+    con_addr_k:"Адрес", con_phone_k:"Телефон", con_email_k:"Эл. почта", con_hours_k:"Часы работы", con_hours_v:"Пн–Пт 08–18 · Сб 10–15 · Вс выходной",
+    foot_tag:"Премиальный уход за авто в сердце Осло — детейлинг, производительность, ремонт и экспертиза по электрокарам.",
+    foot_nav:"Навигация", foot_services_h:"Услуги", foot_reach:"Связаться", foot_rights:"Все права защищены.",
+
+    sp_home:"Главная", sp_services_bc:"Услуги",
+    sp_includes:"Что входит", sp_usecases:"Типичные задачи", sp_expect:"Чего ожидать",
+    sp_pricelist:"Услуги и ориентировочные цены", sp_faq:"Частые вопросы",
+    sp_price:"Ориентировочная цена", sp_duration:"Обычные сроки",
+    sp_disclaimer:"Цены — ориентировочные начальные. Итоговая стоимость зависит от автомобиля, необходимых запчастей и точного объёма работ — вы всегда получаете чёткий расчёт до начала работ.",
+    sp_book:"Записаться", sp_back:"Назад к услугам",
+    it_service:"Услуга", it_time:"Обычное время", it_price:"от",
+    cta_h:"Готовы записаться на это?", cta_p:"Отправьте заявку — мы подтвердим время по телефону.",
+
+    bp_eyebrow:"Заявка на запись", bp_title:"Запишитесь на визит.", bp_sub:"Расскажите об автомобиле и о том, что нужно. Мы свяжемся с вами, чтобы подтвердить удобное время.",
+    bp_notice:"Это заявка на запись, а не мгновенное подтверждение. Мастерская подтвердит окончательную дату и время с вами.",
+    f_name:"Полное имя", f_phone:"Телефон", f_email:"Эл. почта", f_make:"Марка авто", f_model:"Модель",
+    f_reg:"Гос. номер", f_year:"Год", f_service:"Услуга", f_service_ph:"Выберите услугу…",
+    f_date:"Желаемая дата", f_time:"Желаемое время", f_time_ph:"Выберите…", f_msg:"Сообщение / опишите проблему", f_msg_ph:"Необязательно — что нам следует знать",
+    t_morning:"Утро (08–12)", t_midday:"День (12–15)", t_afternoon:"После обеда (15–18)",
+    opt_diag:"Диагностика", opt_brake:"Тормозная система", opt_timing:"Ремень ГРМ / Registerreim", opt_other:"Другой ремонт",
+    bp_submit:"Отправить заявку", bp_sending:"Отправка…",
+    bp_err:"Заполните имя, телефон, почту, марку, модель, услугу и желаемую дату.",
+    bp_send_err:"Не удалось отправить заявку. Позвоните нам +47 22 00 14 20 или попробуйте снова.",
+    bp_ok_title:"Спасибо — заявка получена.", bp_ok:"Мы скоро свяжемся с вами, чтобы подтвердить дату и время. Копия заявки сохранена.",
+    bp_home_btn:"На главную",
+
+    pj_vehicle:"Автомобиль", pj_service:"Выполненная услуга", pj_work:"Выполненные работы", pj_result:"Результат", pj_close:"Закрыть"
+  }
+};
+
+/* ============ SERVICE PAGE CONTENT ============ */
+const SERVICE_ORDER = ["detailing","performance","maintenance-repairs","ev-hybrid","tire-hotel","pre-purchase"];
+
+const SERVICES = {
+  "detailing":{
+    en:{cat:"Detailing & Protection", title:"Detailing", tagline:"Paint correction, ceramic coating and interior restoration.",
+      intro:"Our detailing bay brings paintwork back to a flawless, mirror finish and protects it for years. From a single-stage enhancement to full multi-stage correction with ceramic coating, every car is treated in a dust-controlled, temperature-managed studio.",
+      includes:["Multi-stage machine paint correction","Ceramic coating (1–5 year systems)","Paint protection film (PPF) on high-impact panels","Interior deep-clean, leather care and sanitising","Wheel-off cleaning and sealing","Glass coating and trim restoration"],
+      usecases:["New-car protection before the first winter","Removing swirl marks and light scratches","Preparing a car for sale or photography","Long-term protection for a daily or weekend car"],
+      expect:["A written condition assessment with paint-depth readings","Photos before, during and after correction","Clear aftercare instructions and a maintenance plan","Your car kept only for the agreed time — no surprises"],
+      duration:"1–3 days depending on package", price:"From 2 490 kr",
+      faq:[
+        {q:"How long does a ceramic coating last?",a:"Depending on the system we apply and how the car is maintained, our coatings last from one to five years. We recommend the right product for how you actually use the car."},
+        {q:"Can you remove all scratches?",a:"Most light-to-medium swirl marks and scratches can be corrected. Deep scratches through the clear coat can be improved but not always fully removed — we tell you honestly after inspection."},
+        {q:"Should I coat a brand-new car?",a:"Yes — a new car is the ideal starting point. Protecting fresh paint keeps it looking new and makes washing far easier."},
+        {q:"Do I need to prepare anything?",a:"Just remove personal belongings. Washing, decontamination and preparation are all part of the service."}
+      ]},
+    no:{cat:"Detailing & beskyttelse", title:"Detailing", tagline:"Lakkorrigering, keramisk coating og innvendig restaurering.",
+      intro:"Detailing-avdelingen vår gir lakken tilbake en feilfri, speilblank finish og beskytter den i årevis. Fra ett-trinns oppfriskning til full flertrinns korrigering med keramisk coating — hver bil behandles i et støvkontrollert, temperaturstyrt studio.",
+      includes:["Flertrinns maskinell lakkorrigering","Keramisk coating (1–5 års systemer)","Lakkbeskyttelsesfilm (PPF) på utsatte paneler","Grundig innvendig rens, skinnpleie og desinfisering","Hjul-av rengjøring og forsegling","Glasscoating og restaurering av lister"],
+      usecases:["Nybilbeskyttelse før første vinter","Fjerning av swirls og lette riper","Klargjøring for salg eller fotografering","Langvarig beskyttelse for daglig- eller helgebil"],
+      expect:["Skriftlig tilstandsvurdering med måling av lakktykkelse","Bilder før, under og etter korrigering","Tydelig ettervedlikehold og en vedlikeholdsplan","Bilen beholdes kun i avtalt tid — ingen overraskelser"],
+      duration:"1–3 dager avhengig av pakke", price:"Fra 2 490 kr",
+      faq:[
+        {q:"Hvor lenge varer keramisk coating?",a:"Avhengig av systemet vi bruker og hvordan bilen vedlikeholdes, varer coatingene fra ett til fem år. Vi anbefaler riktig produkt ut fra hvordan du bruker bilen."},
+        {q:"Kan dere fjerne alle riper?",a:"De fleste lette til middels swirls og riper kan korrigeres. Dype riper gjennom klarlakken kan forbedres, men ikke alltid fjernes helt — vi sier ærlig fra etter inspeksjon."},
+        {q:"Bør jeg coate en helt ny bil?",a:"Ja — en ny bil er ideelt utgangspunkt. Å beskytte fersk lakk holder den ny og gjør vask mye enklere."},
+        {q:"Må jeg forberede noe?",a:"Bare ta ut personlige eiendeler. Vask, dekontaminering og klargjøring inngår i tjenesten."}
+      ]},
+    ru:{cat:"Детейлинг и защита", title:"Детейлинг", tagline:"Коррекция лака, керамика и восстановление салона.",
+      intro:"Наш детейлинг-бокс возвращает лаку безупречный зеркальный блеск и защищает его на годы. От одноэтапной полировки до полной многоэтапной коррекции с керамикой — каждый автомобиль обслуживается в чистом боксе с контролем пыли и температуры.",
+      includes:["Многоэтапная машинная полировка лака","Керамическое покрытие (системы на 1–5 лет)","Защитная плёнка (PPF) на уязвимых панелях","Глубокая химчистка салона, уход за кожей и дезинфекция","Мойка колёс со снятием и защита","Покрытие стекла и восстановление молдингов"],
+      usecases:["Защита новой машины перед первой зимой","Удаление голограмм и лёгких царапин","Подготовка к продаже или фотосъёмке","Долгосрочная защита ежедневного или выходного авто"],
+      expect:["Письменная оценка состояния с замером толщины лака","Фото до, во время и после коррекции","Понятные инструкции по уходу и план обслуживания","Авто у нас только на согласованное время — без сюрпризов"],
+      duration:"1–3 дня в зависимости от пакета", price:"от 2 490 kr",
+      faq:[
+        {q:"Сколько держится керамика?",a:"В зависимости от системы и ухода наши покрытия служат от одного до пяти лет. Мы подберём продукт под то, как вы реально используете авто."},
+        {q:"Можно убрать все царапины?",a:"Большинство лёгких и средних голограмм и царапин корректируется. Глубокие царапины сквозь лак можно улучшить, но не всегда убрать полностью — честно скажем после осмотра."},
+        {q:"Стоит покрывать новую машину?",a:"Да — новая машина идеальна для старта. Защита свежего лака сохраняет вид новизны и упрощает мойку."},
+        {q:"Нужно что-то готовить?",a:"Только заберите личные вещи. Мойка, деконтаминация и подготовка входят в услугу."}
+      ]}
+  },
+
+  "performance":{
+    en:{cat:"Performance", title:"Tuning & Performance", tagline:"Dyno-verified power, handling and sound — for road and track.",
+      intro:"We tune for real-world drivability, not just headline numbers. Every calibration is verified on the dyno and road-tested, with upgrades matched to your goals and warranty considerations discussed up front.",
+      includes:["Custom ECU calibration (Stage 1 / Stage 2)","Dyno testing with before/after graphs","Performance exhaust systems","Suspension, coilover and geometry setup","Braking upgrades","Intake, intercooler and supporting mods"],
+      usecases:["More usable torque for everyday driving","Preparing a car for track days","Restoring performance after other upgrades","Sharper throttle response and sound"],
+      expect:["An honest discussion of gains, limits and reliability","Dyno graphs documenting the result","Data-logged, road-verified calibration","Advice on fuel, servicing and warranty impact"],
+      duration:"1–2 days for most stages", price:"From 7 900 kr",
+      faq:[
+        {q:"Will tuning void my warranty?",a:"Modifications can affect parts of a manufacturer warranty. We explain exactly what a given upgrade touches so you can decide, and we keep a stock backup of your original file."},
+        {q:"Do you tune electric cars?",a:"Performance work on EVs is limited and model-specific. For EVs we focus mainly on suspension, tyres and braking — ask us about your model."},
+        {q:"Is a dyno run included?",a:"Yes. Before/after dyno runs are part of every ECU calibration, so you see the real, verified result."},
+        {q:"Can the car stay reliable?",a:"Absolutely — our Stage 1 calibrations are built around long-term reliability on the correct fuel and servicing."}
+      ]},
+    no:{cat:"Ytelse", title:"Tuning & ytelse", tagline:"Dyno-verifisert effekt, veigrep og lyd — for vei og bane.",
+      intro:"Vi tuner for reell kjørbarhet, ikke bare tall på papiret. Hver kalibrering verifiseres på dyno og testes på vei, med oppgraderinger tilpasset dine mål og garantihensyn avklart på forhånd.",
+      includes:["Skreddersydd ECU-kalibrering (Stage 1 / Stage 2)","Dynotest med grafer før/etter","Sportseksosanlegg","Understell, coilover og geometrioppsett","Bremseoppgraderinger","Innsug, intercooler og støttemodifikasjoner"],
+      usecases:["Mer brukbart dreiemoment til daglig kjøring","Klargjøring til banedager","Gjenopprette ytelse etter andre oppgraderinger","Skarpere gassrespons og lyd"],
+      expect:["Ærlig gjennomgang av gevinst, grenser og pålitelighet","Dynografer som dokumenterer resultatet","Dataloggbar, veiverifisert kalibrering","Råd om drivstoff, service og garantipåvirkning"],
+      duration:"1–2 dager for de fleste trinn", price:"Fra 7 900 kr",
+      faq:[
+        {q:"Går garantien tapt ved tuning?",a:"Modifikasjoner kan påvirke deler av en fabrikkgaranti. Vi forklarer nøyaktig hva en oppgradering berører, og beholder en original backup av filen din."},
+        {q:"Tuner dere elbiler?",a:"Ytelsesarbeid på elbil er begrenset og modellavhengig. På elbil fokuserer vi mest på understell, dekk og bremser — spør oss om din modell."},
+        {q:"Er dynokjøring inkludert?",a:"Ja. Dynokjøring før/etter inngår i all ECU-kalibrering, så du ser det reelle, verifiserte resultatet."},
+        {q:"Forblir bilen pålitelig?",a:"Absolutt — Stage 1-kalibreringene våre er laget rundt langvarig pålitelighet på riktig drivstoff og service."}
+      ]},
+    ru:{cat:"Производительность", title:"Тюнинг и производительность", tagline:"Мощность, управляемость и звук с замером на стенде — для дороги и трека.",
+      intro:"Мы настраиваем ради реальной управляемости, а не только цифр. Каждая калибровка проверяется на стенде и в дороге, апгрейды подбираются под ваши цели, а влияние на гарантию обсуждается заранее.",
+      includes:["Индивидуальная калибровка ЭБУ (Stage 1 / Stage 2)","Замеры на стенде с графиками до/после","Спортивные выхлопные системы","Подвеска, койловеры и настройка геометрии","Апгрейд тормозов","Впуск, интеркулер и сопутствующие доработки"],
+      usecases:["Больше полезного момента для повседневной езды","Подготовка к трек-дням","Восстановление отдачи после других доработок","Более острый отклик газа и звук"],
+      expect:["Честный разговор о приросте, пределах и надёжности","Графики со стенда, документирующие результат","Калибровка с логами, проверенная в дороге","Советы по топливу, обслуживанию и влиянию на гарантию"],
+      duration:"1–2 дня для большинства стадий", price:"от 7 900 kr",
+      faq:[
+        {q:"Тюнинг аннулирует гарантию?",a:"Доработки могут влиять на часть заводской гарантии. Мы точно объясняем, что затрагивает апгрейд, и сохраняем резервную копию исходной прошивки."},
+        {q:"Настраиваете электромобили?",a:"Работа с производительностью EV ограничена и зависит от модели. Для EV мы делаем в основном подвеску, шины и тормоза — спросите о вашей модели."},
+        {q:"Замер на стенде входит?",a:"Да. Замеры до/после — часть каждой калибровки ЭБУ, так что вы видите реальный проверенный результат."},
+        {q:"Останется ли авто надёжным?",a:"Безусловно — наши калибровки Stage 1 построены вокруг долгой надёжности на правильном топливе и обслуживании."}
+      ]}
+  },
+
+  "maintenance-repairs":{
+    en:{cat:"Maintenance & Repairs", title:"Maintenance & Repairs", tagline:"A full-service workshop — from periodic service to real mechanical repairs.",
+      intro:"We're a complete mechanical workshop, not just a service centre. Whether your car is due for a periodic service or something has actually gone wrong — brakes, battery, suspension, cooling, clutch, timing belt or a warning light you can't explain — we diagnose it, quote it clearly and repair it to manufacturer standard.",
+      includes:["Periodic service to the manufacturer schedule","Genuine and OE-quality parts","Full computer diagnostics","Repairs logged in your service history","Free follow-up on completed work"],
+      usecases:["Scheduled service to keep the warranty valid","A warning light or fault that needs diagnosis","Brakes, battery or suspension that need repair","Preparing for — or fixing after — the EU control (EU-kontroll)"],
+      expect:["A clear quote before any repair work begins","Diagnosis explained in plain language","Old parts shown or returned on request","Work backed by warranty"],
+      duration:"From under an hour to a full day, depending on the job", price:"Service from 1 990 kr",
+      items:[
+        {name:"Periodic service",desc:"Oil, filters and a full multi-point inspection to schedule.",time:"1.5–3 h",price:"From 1 990 kr"},
+        {name:"Oil & filter change",desc:"Fresh oil and filter to the correct specification.",time:"45–60 min",price:"From 1 290 kr"},
+        {name:"Brake inspection",desc:"Full check of pads, discs, lines and fluid.",time:"30 min",price:"From 590 kr"},
+        {name:"Brake pads & discs",desc:"Replacement per axle with quality parts.",time:"1–2 h",price:"From 1 890 kr"},
+        {name:"Brake fluid change",desc:"Complete flush and bleed to spec.",time:"45 min",price:"From 990 kr"},
+        {name:"Battery replacement",desc:"Test and replace, with coding where needed.",time:"30–45 min",price:"From 1 490 kr"},
+        {name:"Diagnostics & fault finding",desc:"Computer diagnosis to trace warning lights and faults.",time:"1 h",price:"From 890 kr"},
+        {name:"Suspension & steering",desc:"Shocks, arms, bushings and steering components.",time:"Varies",price:"From 1 690 kr"},
+        {name:"Clutch repairs",desc:"Clutch and related driveline work.",time:"4–8 h",price:"From 8 900 kr"},
+        {name:"Cooling system",desc:"Pumps, thermostats, radiators and leak repair.",time:"Varies",price:"From 1 990 kr"},
+        {name:"Exhaust repairs",desc:"Repair or replace exhaust sections and sensors.",time:"Varies",price:"From 1 490 kr"},
+        {name:"AC service",desc:"Refill, leak test and cabin filter.",time:"1 h",price:"From 1 290 kr"},
+        {name:"Timing belt / registerreim",desc:"Belt, tensioner and pump — price varies heavily by engine.",time:"3–6 h",price:"From 4 900 kr"},
+        {name:"Auxiliary belt / multireim",desc:"Replace the auxiliary drive belt.",time:"1 h",price:"From 1 290 kr"},
+        {name:"General mechanical repairs",desc:"Diagnosis-led repairs, quoted after inspection.",time:"Varies",price:"On inspection"},
+        {name:"EU-control pre-check & follow-up",desc:"Catch and fix faults before or after the EU control.",time:"45 min +",price:"From 690 kr"}
+      ],
+      faq:[
+        {q:"Do you only do servicing, or real repairs too?",a:"Both. We handle everything from a periodic oil service to brakes, clutches, cooling systems, suspension and full fault diagnosis. This is a complete mechanical workshop."},
+        {q:"Can you service my car without voiding the warranty?",a:"Yes. Servicing at an independent workshop with the correct parts and a logged history keeps your new-car warranty intact under EEA rules."},
+        {q:"How much is a timing belt (registerreim)?",a:"It depends heavily on the engine — some are a few hours, others require removing significant components. We give an exact quote for your specific car before starting."},
+        {q:"Can you help with the EU control?",a:"Yes — we do a pre-check to catch anything that would fail, and we handle the follow-up repairs if your car has already failed."},
+        {q:"Do you use genuine parts?",a:"We use genuine or OE-quality parts as standard, and we always tell you which is being fitted."}
+      ]},
+    no:{cat:"Vedlikehold & reparasjon", title:"Vedlikehold & reparasjon", tagline:"Et komplett verksted — fra periodisk service til ekte mekaniske reparasjoner.",
+      intro:"Vi er et komplett mekanisk verksted, ikke bare et servicesenter. Enten bilen skal ha periodisk service eller noe faktisk har gått galt — bremser, batteri, understell, kjøling, clutch, registerreim eller en varsellampe du ikke forstår — feilsøker vi det, gir tydelig pris og reparerer etter fabrikkstandard.",
+      includes:["Periodisk service etter fabrikkens plan","Originale og OE-deler","Full datadiagnostikk","Reparasjoner loggført i servicehistorikken","Gratis oppfølging av utført arbeid"],
+      usecases:["Planlagt service for å beholde garantien","Varsellampe eller feil som må feilsøkes","Bremser, batteri eller understell som må repareres","Klargjøring til — eller reparasjon etter — EU-kontroll"],
+      expect:["Tydelig pris før reparasjonsarbeid starter","Feilsøking forklart på vanlig norsk","Gamle deler vises eller returneres på forespørsel","Arbeid med garanti"],
+      duration:"Fra under en time til en hel dag, avhengig av jobben", price:"Service fra 1 990 kr",
+      items:[
+        {name:"Periodisk service",desc:"Olje, filtre og full multipunkts-kontroll etter plan.",time:"1,5–3 t",price:"Fra 1 990 kr"},
+        {name:"Olje- og filterskift",desc:"Ny olje og filter etter riktig spesifikasjon.",time:"45–60 min",price:"Fra 1 290 kr"},
+        {name:"Bremsesjekk",desc:"Full kontroll av klosser, skiver, slanger og væske.",time:"30 min",price:"Fra 590 kr"},
+        {name:"Bremseklosser & skiver",desc:"Bytte per aksel med kvalitetsdeler.",time:"1–2 t",price:"Fra 1 890 kr"},
+        {name:"Bremsevæskeskift",desc:"Full spyling og lufting etter spesifikasjon.",time:"45 min",price:"Fra 990 kr"},
+        {name:"Batteribytte",desc:"Test og bytte, med koding ved behov.",time:"30–45 min",price:"Fra 1 490 kr"},
+        {name:"Diagnose & feilsøking",desc:"Datadiagnose for å spore varsellamper og feil.",time:"1 t",price:"Fra 890 kr"},
+        {name:"Understell & styring",desc:"Støtdempere, armer, bøssinger og styrekomponenter.",time:"Varierer",price:"Fra 1 690 kr"},
+        {name:"Clutch-reparasjon",desc:"Clutch og tilhørende drivverksarbeid.",time:"4–8 t",price:"Fra 8 900 kr"},
+        {name:"Kjølesystem",desc:"Pumper, termostater, radiatorer og lekkasjereparasjon.",time:"Varierer",price:"Fra 1 990 kr"},
+        {name:"Eksosreparasjon",desc:"Reparere eller bytte eksosdeler og sensorer.",time:"Varierer",price:"Fra 1 490 kr"},
+        {name:"AC-service",desc:"Påfylling, lekkasjetest og kupéfilter.",time:"1 t",price:"Fra 1 290 kr"},
+        {name:"Registerreim",desc:"Reim, strammer og pumpe — pris varierer sterkt med motor.",time:"3–6 t",price:"Fra 4 900 kr"},
+        {name:"Multireim",desc:"Bytte av hjelpedrivreim.",time:"1 t",price:"Fra 1 290 kr"},
+        {name:"Generelle mekaniske reparasjoner",desc:"Diagnosestyrte reparasjoner, pris etter befaring.",time:"Varierer",price:"Etter befaring"},
+        {name:"EU-kontroll forhåndssjekk & oppfølging",desc:"Fang opp og fiks feil før eller etter EU-kontroll.",time:"45 min +",price:"Fra 690 kr"}
+      ],
+      faq:[
+        {q:"Gjør dere bare service, eller ekte reparasjoner også?",a:"Begge deler. Vi håndterer alt fra periodisk oljeservice til bremser, clutch, kjølesystem, understell og full feilsøking. Dette er et komplett mekanisk verksted."},
+        {q:"Kan dere service uten å miste garantien?",a:"Ja. Service hos et uavhengig verksted med riktige deler og loggført historikk beholder nybilgarantien i tråd med EØS-reglene."},
+        {q:"Hva koster registerreim?",a:"Det avhenger sterkt av motoren — noen tar noen timer, andre krever demontering av mye. Vi gir eksakt pris for din bil før vi starter."},
+        {q:"Kan dere hjelpe med EU-kontroll?",a:"Ja — vi gjør en forhåndssjekk for å fange opp det som ville stryke, og tar oppfølgingsreparasjonene hvis bilen allerede har strøket."},
+        {q:"Bruker dere originaldeler?",a:"Vi bruker originale eller OE-deler som standard, og sier alltid fra hva som monteres."}
+      ]},
+    ru:{cat:"ТО и ремонт", title:"ТО и ремонт", tagline:"Полноценный сервис — от планового ТО до реального механического ремонта.",
+      intro:"Мы полноценная механическая мастерская, а не только сервис-центр. Плановое ТО или реальная поломка — тормоза, аккумулятор, подвеска, охлаждение, сцепление, ремень ГРМ или непонятная лампа — мы диагностируем, даём чёткий расчёт и ремонтируем по заводскому стандарту.",
+      includes:["Плановое ТО по регламенту завода","Оригинальные и OE-запчасти","Полная компьютерная диагностика","Ремонт с записью в сервисную историю","Бесплатная проверка после работ"],
+      usecases:["Плановое ТО для сохранения гарантии","Лампа или неисправность, требующая диагностики","Тормоза, аккумулятор или подвеска в ремонт","Подготовка к техосмотру (EU-kontroll) или устранение замечаний"],
+      expect:["Чёткий расчёт до начала ремонта","Диагностика простым языком","Старые детали показываем или возвращаем по запросу","Работы с гарантией"],
+      duration:"От менее часа до полного дня, в зависимости от работы", price:"ТО от 1 990 kr",
+      items:[
+        {name:"Плановое ТО",desc:"Масло, фильтры и полная проверка по регламенту.",time:"1,5–3 ч",price:"от 1 990 kr"},
+        {name:"Замена масла и фильтра",desc:"Свежее масло и фильтр по спецификации.",time:"45–60 мин",price:"от 1 290 kr"},
+        {name:"Проверка тормозов",desc:"Полная проверка колодок, дисков, трубок и жидкости.",time:"30 мин",price:"от 590 kr"},
+        {name:"Колодки и диски",desc:"Замена на ось качественными деталями.",time:"1–2 ч",price:"от 1 890 kr"},
+        {name:"Замена тормозной жидкости",desc:"Полная прокачка и замена по спецификации.",time:"45 мин",price:"от 990 kr"},
+        {name:"Замена аккумулятора",desc:"Тест и замена, с кодировкой при необходимости.",time:"30–45 мин",price:"от 1 490 kr"},
+        {name:"Диагностика и поиск неисправностей",desc:"Компьютерная диагностика ламп и ошибок.",time:"1 ч",price:"от 890 kr"},
+        {name:"Подвеска и рулевое",desc:"Амортизаторы, рычаги, сайлентблоки и рулевые узлы.",time:"Индивид.",price:"от 1 690 kr"},
+        {name:"Ремонт сцепления",desc:"Сцепление и связанные работы по трансмиссии.",time:"4–8 ч",price:"от 8 900 kr"},
+        {name:"Система охлаждения",desc:"Помпы, термостаты, радиаторы и течи.",time:"Индивид.",price:"от 1 990 kr"},
+        {name:"Ремонт выхлопа",desc:"Ремонт или замена секций выхлопа и датчиков.",time:"Индивид.",price:"от 1 490 kr"},
+        {name:"Обслуживание кондиционера",desc:"Заправка, тест на утечку и салонный фильтр.",time:"1 ч",price:"от 1 290 kr"},
+        {name:"Ремень ГРМ / registerreim",desc:"Ремень, ролик и помпа — цена сильно зависит от двигателя.",time:"3–6 ч",price:"от 4 900 kr"},
+        {name:"Приводной ремень / multireim",desc:"Замена вспомогательного приводного ремня.",time:"1 ч",price:"от 1 290 kr"},
+        {name:"Общий механический ремонт",desc:"Ремонт по результатам диагностики, цена после осмотра.",time:"Индивид.",price:"После осмотра"},
+        {name:"Проверка перед техосмотром и устранение",desc:"Найти и устранить замечания до или после техосмотра.",time:"45 мин +",price:"от 690 kr"}
+      ],
+      faq:[
+        {q:"Вы делаете только ТО или и реальный ремонт?",a:"И то, и другое. От планового ТО до тормозов, сцепления, систем охлаждения, подвески и полной диагностики. Это полноценная механическая мастерская."},
+        {q:"Обслужите без потери гарантии?",a:"Да. Обслуживание в независимой мастерской с правильными деталями и записанной историей сохраняет гарантию по правилам ЕЭЗ."},
+        {q:"Сколько стоит ремень ГРМ?",a:"Сильно зависит от двигателя — где-то пара часов, где-то нужен серьёзный демонтаж. Точный расчёт для вашего авто даём до начала."},
+        {q:"Поможете с техосмотром?",a:"Да — делаем предварительную проверку, чтобы поймать возможные замечания, и устраняем их до или после техосмотра."},
+        {q:"Используете оригинальные детали?",a:"По умолчанию используем оригинал или OE-качество и всегда сообщаем, что именно ставим."}
+      ]}
+  },
+
+  "ev-hybrid":{
+    en:{cat:"Electric & Hybrid", title:"EV & Hybrid Service", tagline:"High-voltage expertise for electric and hybrid cars.",
+      intro:"Electric and hybrid cars need specific knowledge and equipment. Our technicians are trained for high-voltage systems and handle everything from routine service to battery health checks and software care — safely and to manufacturer standard.",
+      includes:["High-voltage battery health diagnostics","Thermal and cooling system service","Brake service (with regen considerations)","Software and firmware checks","12 V system and charging fault repair","Cabin filter, tyres and general service"],
+      usecases:["Range or charging concerns","Routine service for an EV or hybrid","Battery health report before buying or selling","Warning lights on the high-voltage system"],
+      expect:["Safe, trained handling of high-voltage systems","A clear battery state-of-health readout","Honest advice on range and degradation","Service logged to keep the warranty valid"],
+      duration:"A few hours to a day", price:"From 1 490 kr",
+      faq:[
+        {q:"Can you check my battery health?",a:"Yes. We produce a state-of-health report showing usable capacity and degradation — useful for peace of mind or before buying/selling."},
+        {q:"Is it safe to service an EV independently?",a:"With trained technicians and the right equipment, yes. We follow strict high-voltage safety procedures on every job."},
+        {q:"Do EVs still need regular service?",a:"Yes — brakes, tyres, cabin filters, cooling and software all need attention, even without an engine oil change."},
+        {q:"Which brands do you work on?",a:"Most mainstream EV and hybrid brands. Tell us your model and we'll confirm exactly what we can cover."}
+      ]},
+    no:{cat:"El & hybrid", title:"El- & hybridservice", tagline:"Høyspentkompetanse for el- og hybridbiler.",
+      intro:"El- og hybridbiler krever spesifikk kunnskap og utstyr. Teknikerne våre er opplært for høyspentsystemer og håndterer alt fra rutineservice til batterihelsesjekk og programvarepleie — trygt og etter fabrikkstandard.",
+      includes:["Diagnostikk av høyspent batterihelse","Service på termiske og kjølesystemer","Bremseservice (med hensyn til regenerering)","Sjekk av programvare og fastvare","Reparasjon av 12 V-system og ladefeil","Kupéfilter, dekk og generell service"],
+      usecases:["Bekymring om rekkevidde eller lading","Rutineservice for elbil eller hybrid","Batterihelserapport før kjøp eller salg","Varsellamper på høyspentsystemet"],
+      expect:["Trygg, opplært håndtering av høyspentsystemer","Tydelig avlesning av batteriets helsetilstand","Ærlige råd om rekkevidde og degradering","Service loggført for å beholde garantien"],
+      duration:"Fra noen timer til en dag", price:"Fra 1 490 kr",
+      faq:[
+        {q:"Kan dere sjekke batterihelsen?",a:"Ja. Vi lager en helsetilstandsrapport som viser brukbar kapasitet og degradering — nyttig for trygghet eller før kjøp/salg."},
+        {q:"Er det trygt med uavhengig elbilservice?",a:"Med opplærte teknikere og riktig utstyr, ja. Vi følger strenge høyspent-sikkerhetsrutiner på hver jobb."},
+        {q:"Trenger elbiler fortsatt service?",a:"Ja — bremser, dekk, kupéfilter, kjøling og programvare trenger tilsyn, selv uten oljeskift."},
+        {q:"Hvilke merker jobber dere med?",a:"De fleste vanlige el- og hybridmerker. Fortell oss modellen, så bekrefter vi nøyaktig hva vi dekker."}
+      ]},
+    ru:{cat:"Электро и гибриды", title:"Сервис электро и гибридов", tagline:"Экспертиза по высоковольтным системам электро- и гибридных авто.",
+      intro:"Электро- и гибридным авто нужны особые знания и оборудование. Наши техники обучены работе с высоковольтными системами и делают всё — от планового обслуживания до проверки состояния батареи и работы с ПО — безопасно и по заводскому стандарту.",
+      includes:["Диагностика состояния высоковольтной батареи","Обслуживание тепловых и охлаждающих систем","Обслуживание тормозов (с учётом рекуперации)","Проверка софта и прошивок","Ремонт системы 12 В и неисправностей зарядки","Салонный фильтр, шины и общий сервис"],
+      usecases:["Вопросы по запасу хода или зарядке","Плановое обслуживание EV или гибрида","Отчёт о состоянии батареи перед покупкой/продажей","Лампы на высоковольтной системе"],
+      expect:["Безопасная работа обученных техников с ВВ-системами","Понятный отчёт о состоянии батареи","Честные советы по запасу хода и деградации","Сервис с записью для сохранения гарантии"],
+      duration:"От нескольких часов до дня", price:"от 1 490 kr",
+      faq:[
+        {q:"Проверите состояние батареи?",a:"Да. Составим отчёт SoH с полезной ёмкостью и деградацией — для спокойствия или перед покупкой/продажей."},
+        {q:"Безопасно ли независимое обслуживание EV?",a:"С обученными техниками и нужным оборудованием — да. На каждой работе соблюдаем строгие правила ВВ-безопасности."},
+        {q:"Нужен ли EV регулярный сервис?",a:"Да — тормоза, шины, салонный фильтр, охлаждение и ПО требуют внимания даже без замены масла."},
+        {q:"С какими марками работаете?",a:"С большинством массовых марок EV и гибридов. Назовите модель — уточним, что именно покроем."}
+      ]}
+  },
+
+  "tire-hotel":{
+    en:{cat:"Seasonal Tyre Storage", title:"Tire Hotel", tagline:"Climate-controlled tyre storage with wash, balancing and easy swaps.",
+      intro:"Store your seasonal wheels with us and forget about hauling tyres twice a year. Each set is washed, inspected, balanced and kept in a climate-controlled facility — ready to fit the moment the season changes.",
+      includes:["Climate-controlled seasonal storage","Wash and inspection of each wheel","Balancing on refit","Tread-depth and damage report","Online swap booking","Safe, insured facility"],
+      usecases:["No space to store winter or summer tyres at home","Wanting a booked, hassle-free seasonal swap","Keeping wheels in top condition between seasons"],
+      expect:["A clear per-season price","Your tyres cleaned and inspected","A reminder when it's time to swap","Balanced wheels fitted and torqued correctly"],
+      duration:"Swap appointment ~45–60 min", price:"From 1 290 kr / sesong",
+      faq:[
+        {q:"What's included in the price?",a:"Storage for the season, washing, inspection and balancing on refit. The swap fitting is booked when the season changes."},
+        {q:"How do I get my tyres back?",a:"Book a swap online or by phone and we'll have your set cleaned, balanced and ready to fit at your appointment."},
+        {q:"Do you check the tyres?",a:"Yes — we report tread depth and any damage so you know in good time if a set needs replacing."},
+        {q:"How many sets can I store?",a:"As many as you need — the price is per set, per season."}
+      ]},
+    no:{cat:"Sesonglagring av dekk", title:"Dekkhotell", tagline:"Temperaturkontrollert dekklagring med vask, balansering og enkle skift.",
+      intro:"Lagre sesonghjulene hos oss og slipp å frakte dekk to ganger i året. Hvert sett vaskes, kontrolleres, balanseres og oppbevares i et temperaturkontrollert anlegg — klart til montering så snart sesongen skifter.",
+      includes:["Temperaturkontrollert sesonglagring","Vask og kontroll av hvert hjul","Balansering ved montering","Rapport om mønsterdybde og skader","Skiftbooking på nett","Trygt, forsikret anlegg"],
+      usecases:["Ingen plass til vinter- eller sommerdekk hjemme","Ønske om booket, enkelt sesongskift","Holde hjulene i topp stand mellom sesongene"],
+      expect:["Tydelig pris per sesong","Dekkene dine rengjort og kontrollert","Påminnelse når det er tid for skift","Balanserte hjul montert og tiltrukket riktig"],
+      duration:"Skiftavtale ~45–60 min", price:"Fra 1 290 kr / sesong",
+      faq:[
+        {q:"Hva er inkludert i prisen?",a:"Lagring for sesongen, vask, kontroll og balansering ved montering. Selve skiftet bookes når sesongen skifter."},
+        {q:"Hvordan får jeg dekkene tilbake?",a:"Book et skift på nett eller telefon, så har vi settet rengjort, balansert og klart til montering ved timen din."},
+        {q:"Kontrollerer dere dekkene?",a:"Ja — vi rapporterer mønsterdybde og eventuelle skader, så du vet i god tid om et sett må byttes."},
+        {q:"Hvor mange sett kan jeg lagre?",a:"Så mange du trenger — prisen er per sett, per sesong."}
+      ]},
+    ru:{cat:"Сезонное хранение шин", title:"Отель для шин", tagline:"Хранение шин с климат-контролем, мойкой, балансировкой и лёгкой переобувкой.",
+      intro:"Храните сезонные колёса у нас и забудьте о возне с шинами дважды в год. Каждый комплект моют, осматривают, балансируют и держат в помещении с климат-контролем — готов к установке, как только сменится сезон.",
+      includes:["Сезонное хранение с климат-контролем","Мойка и осмотр каждого колеса","Балансировка при установке","Отчёт о глубине протектора и повреждениях","Онлайн-запись на переобувку","Безопасное застрахованное помещение"],
+      usecases:["Нет места хранить зимние или летние шины дома","Нужна запланированная переобувка без хлопот","Держать колёса в отличном состоянии между сезонами"],
+      expect:["Понятная цена за сезон","Шины вымыты и осмотрены","Напоминание, когда пора переобуваться","Отбалансированные колёса, установленные с нужным моментом"],
+      duration:"Запись на переобувку ~45–60 мин", price:"от 1 290 kr / сезон",
+      faq:[
+        {q:"Что входит в цену?",a:"Хранение на сезон, мойка, осмотр и балансировка при установке. Сама переобувка записывается при смене сезона."},
+        {q:"Как забрать шины?",a:"Запишитесь на переобувку онлайн или по телефону — комплект будет вымыт, отбалансирован и готов к установке."},
+        {q:"Вы проверяете шины?",a:"Да — сообщаем глубину протектора и повреждения, чтобы вы заранее знали, если комплект пора менять."},
+        {q:"Сколько комплектов можно хранить?",a:"Сколько нужно — цена за комплект за сезон."}
+      ]}
+  },
+
+  "pre-purchase":{
+    en:{cat:"Pre-Purchase Inspection", title:"Pre-Purchase Inspection", tagline:"An independent, honest check before you buy.",
+      intro:"Buying a used car is a big decision. We give it an independent 150-point inspection — mechanical, electronic and cosmetic — with a full report, photos and a frank verdict, so you know exactly what you're buying before you pay.",
+      includes:["150-point mechanical and electronic inspection","Full computer diagnostic scan","Brakes, suspension, tyres and underbody check","Battery health check (EV/hybrid)","Road-test assessment","Written report with photos"],
+      usecases:["Before buying a used car privately or from a dealer","Verifying a seller's claims","Negotiating price with documented findings","Peace of mind on a long-distance purchase"],
+      expect:["A completely independent opinion","A clear report you can act on","Photos of any issues found","Honest advice on whether to buy, negotiate or walk away"],
+      duration:"About 2–3 hours", price:"From 2 490 kr",
+      faq:[
+        {q:"Do I need to bring the car?",a:"The car needs to be with us for the inspection. We can often arrange the timing directly with the seller."},
+        {q:"What if you find problems?",a:"You get a documented list you can use to negotiate — or to walk away. That's exactly what the inspection is for."},
+        {q:"Is this the same as the EU control?",a:"No — this is far more thorough and independent, focused on protecting you as a buyer, not just legal roadworthiness."},
+        {q:"How fast is the report?",a:"You'll usually have the full written report the same day."}
+      ]},
+    no:{cat:"Tilstandsrapport før kjøp", title:"Tilstandsrapport", tagline:"En uavhengig, ærlig sjekk før du kjøper.",
+      intro:"Å kjøpe bruktbil er en stor beslutning. Vi gir bilen en uavhengig 150-punkts inspeksjon — mekanisk, elektronisk og kosmetisk — med full rapport, bilder og en ærlig konklusjon, så du vet nøyaktig hva du kjøper før du betaler.",
+      includes:["150-punkts mekanisk og elektronisk inspeksjon","Full datadiagnose-skann","Kontroll av bremser, understell, dekk og understellsbunn","Batterihelsesjekk (el/hybrid)","Vurdering under prøvekjøring","Skriftlig rapport med bilder"],
+      usecases:["Før kjøp av bruktbil privat eller fra forhandler","Verifisere selgers påstander","Forhandle pris med dokumenterte funn","Trygghet ved kjøp langt unna"],
+      expect:["En helt uavhengig vurdering","En tydelig rapport du kan handle på","Bilder av eventuelle funn","Ærlige råd om å kjøpe, forhandle eller gå fra det"],
+      duration:"Cirka 2–3 timer", price:"Fra 2 490 kr",
+      faq:[
+        {q:"Må jeg ha med bilen?",a:"Bilen må være hos oss under inspeksjonen. Vi kan ofte avtale tidspunkt direkte med selger."},
+        {q:"Hva om dere finner problemer?",a:"Du får en dokumentert liste du kan bruke til å forhandle — eller til å gå fra kjøpet. Det er nettopp derfor inspeksjonen finnes."},
+        {q:"Er dette det samme som EU-kontroll?",a:"Nei — dette er langt grundigere og uavhengig, med fokus på å beskytte deg som kjøper, ikke bare lovlig kjøretøykontroll."},
+        {q:"Hvor raskt kommer rapporten?",a:"Du har vanligvis den fulle skriftlige rapporten samme dag."}
+      ]},
+    ru:{cat:"Диагностика перед покупкой", title:"Диагностика перед покупкой", tagline:"Независимая честная проверка до покупки.",
+      intro:"Покупка б/у авто — серьёзное решение. Мы делаем независимую проверку по 150 пунктам — механика, электроника и кузов — с полным отчётом, фото и честным вердиктом, чтобы вы точно знали, что покупаете, до оплаты.",
+      includes:["Проверка по 150 пунктам: механика и электроника","Полное компьютерное сканирование","Проверка тормозов, подвески, шин и днища","Проверка состояния батареи (EV/гибрид)","Оценка на тест-драйве","Письменный отчёт с фото"],
+      usecases:["Перед покупкой б/у у частника или дилера","Проверка заявлений продавца","Торг по цене с задокументированными находками","Спокойствие при удалённой покупке"],
+      expect:["Полностью независимое мнение","Понятный отчёт, на который можно опереться","Фото любых найденных проблем","Честный совет: покупать, торговаться или отказаться"],
+      duration:"Около 2–3 часов", price:"от 2 490 kr",
+      faq:[
+        {q:"Нужно привозить авто?",a:"Машина должна быть у нас на время проверки. Часто мы согласуем время напрямую с продавцом."},
+        {q:"Что если найдёте проблемы?",a:"Вы получите задокументированный список для торга — или чтобы отказаться. Именно для этого и нужна проверка."},
+        {q:"Это то же, что техосмотр?",a:"Нет — это гораздо тщательнее и независимо, с упором на защиту вас как покупателя, а не только на допуск к дороге."},
+        {q:"Как быстро отчёт?",a:"Обычно полный письменный отчёт готов в тот же день."}
+      ]}
+  }
+};
+
+/* ============ BOOKING SERVICE OPTIONS ============ */
+const bookingServices = [
+  {v:"detailing", k:"svc1_t"},
+  {v:"performance", k:"svc2_t"},
+  {v:"maintenance-repairs", k:"svc3_t"},
+  {v:"ev-hybrid", k:"svc4_t"},
+  {v:"tire-hotel", k:"svc5_t"},
+  {v:"pre-purchase", k:"svc6_t"},
+  {v:"diagnostics", k:"opt_diag"},
+  {v:"brake-service", k:"opt_brake"},
+  {v:"timing-belt", k:"opt_timing"},
+  {v:"other", k:"opt_other"}
+];
+
+/* ============ PROJECTS (portfolio) ============ */
+const PROJECTS = [
+  {img:"https://images.unsplash.com/photo-1770834807387-820280f8270b?q=80&w=1200", alt:"Close-up of a wheel and brake caliper",
+    en:{title:"Ceramic Coating — 992 GT3", vehicle:"Porsche 911 GT3 (992)", service:"Detailing & Protection",
+      desc:"A track-focused GT3 booked in for full paint correction and a five-year ceramic coating before its first season.",
+      work:["Two-stage machine paint correction","Five-year ceramic coating applied","Wheels removed, cleaned and sealed"],
+      result:"A deep, glass-like finish that repels water and stays cleaner between track days."},
+    no:{title:"Keramisk coating — 992 GT3", vehicle:"Porsche 911 GT3 (992)", service:"Detailing & beskyttelse",
+      desc:"En baneorientert GT3 inne til full lakkorrigering og fem års keramisk coating før første sesong.",
+      work:["To-trinns maskinell lakkorrigering","Fem års keramisk coating påført","Hjul demontert, rengjort og forseglet"],
+      result:"En dyp, speilblank finish som frastøter vann og holder seg renere mellom banedager."},
+    ru:{title:"Керамика — 992 GT3", vehicle:"Porsche 911 GT3 (992)", service:"Детейлинг и защита",
+      desc:"Трековый GT3 приехал на полную коррекцию лака и пятилетнюю керамику перед первым сезоном.",
+      work:["Двухэтапная машинная коррекция лака","Нанесена пятилетняя керамика","Колёса сняты, вымыты и защищены"],
+      result:"Глубокий зеркальный блеск, который отталкивает воду и остаётся чище между трек-днями."}},
+
+  {img:"https://images.unsplash.com/photo-1756140813021-68744a60839f?q=80&w=1200", alt:"Supercar in the workshop",
+    en:{title:"Performance Build — V10", vehicle:"Audi R8 V10", service:"Tuning & Performance",
+      desc:"A naturally aspirated V10 in for an exhaust upgrade, geometry setup and a road-verified calibration.",
+      work:["Performance exhaust system fitted","Corner-balanced suspension geometry","Dyno-verified ECU calibration"],
+      result:"Sharper throttle response and a fuller top-end, documented with before/after dyno graphs."},
+    no:{title:"Ytelsesbygg — V10", vehicle:"Audi R8 V10", service:"Tuning & ytelse",
+      desc:"En sugemotor-V10 inne for eksosoppgradering, geometrioppsett og en veiverifisert kalibrering.",
+      work:["Sportseksosanlegg montert","Hjørnebalansert understellsgeometri","Dyno-verifisert ECU-kalibrering"],
+      result:"Skarpere gassrespons og fyldigere toppregister, dokumentert med dynografer før/etter."},
+    ru:{title:"Сборка на мощность — V10", vehicle:"Audi R8 V10", service:"Тюнинг и производительность",
+      desc:"Атмосферный V10 на апгрейд выхлопа, настройку геометрии и калибровку, проверенную в дороге.",
+      work:["Установлена спортивная выхлопная система","Развесовка и геометрия подвески","Калибровка ЭБУ с замером на стенде"],
+      result:"Более острый отклик газа и насыщенные верхи, задокументировано графиками до/после."}},
+
+  {img:"https://images.unsplash.com/photo-1623878404982-618f0f172fb3?q=80&w=1200", alt:"Sports car in a dark studio",
+    en:{title:"Paint Correction — GT", vehicle:"Mercedes-AMG GT", service:"Detailing",
+      desc:"A daily-driven AMG GT with heavy swirl marks restored to a uniform, defect-free gloss.",
+      work:["Paint decontamination and clay treatment","Multi-stage correction of swirls","Protective sealant applied"],
+      result:"Even reflections and a clean, dark gloss under direct light."},
+    no:{title:"Lakkorrigering — GT", vehicle:"Mercedes-AMG GT", service:"Detailing",
+      desc:"En daglig-kjørt AMG GT med kraftige swirls gjenopprettet til en jevn, defektfri glans.",
+      work:["Lakkdekontaminering og clay-behandling","Flertrinns korrigering av swirls","Beskyttende forsegling påført"],
+      result:"Jevne refleksjoner og en ren, dyp glans i direkte lys."},
+    ru:{title:"Коррекция лака — GT", vehicle:"Mercedes-AMG GT", service:"Детейлинг",
+      desc:"Ежедневный AMG GT с сильными голограммами восстановлен до ровного блеска без дефектов.",
+      work:["Деконтаминация лака и обработка глиной","Многоэтапная коррекция голограмм","Нанесён защитный силант"],
+      result:"Ровные отражения и чистый глубокий блеск на прямом свету."}},
+
+  {img:"https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1200", alt:"Mechanic working under a car",
+    en:{title:"Full Major Service", vehicle:"BMW 5 Series", service:"Maintenance & Repairs",
+      desc:"A high-mileage 5 Series in for a full major service plus brake and cooling repairs after a warning light.",
+      work:["Oil, filters and full inspection","Front brake discs and pads replaced","Coolant leak traced and repaired"],
+      result:"Warning light cleared, brakes restored and service history fully logged."},
+    no:{title:"Full storservice", vehicle:"BMW 5-serie", service:"Vedlikehold & reparasjon",
+      desc:"En 5-serie med høy kilometerstand inne til full storservice pluss brems- og kjølereparasjon etter en varsellampe.",
+      work:["Olje, filtre og full kontroll","Fremre bremseskiver og klosser byttet","Kjølevæskelekkasje sporet og reparert"],
+      result:"Varsellampe slukket, bremser gjenopprettet og servicehistorikk fullt loggført."},
+    ru:{title:"Большое ТО", vehicle:"BMW 5 серии", service:"ТО и ремонт",
+      desc:"5 серии с большим пробегом на полное ТО плюс ремонт тормозов и охлаждения после загоревшейся лампы.",
+      work:["Масло, фильтры и полная проверка","Заменены передние диски и колодки","Найдена и устранена течь охлаждающей жидкости"],
+      result:"Лампа погашена, тормоза восстановлены, сервисная история записана."}},
+
+  {img:"https://images.unsplash.com/photo-1640616111573-276dd3e31666?q=80&w=1200", alt:"Mechanics working on a car in the workshop",
+    en:{title:"PPF Wrap — Daily GT", vehicle:"Porsche Panamera", service:"Detailing & Protection",
+      desc:"A daily-driven Panamera protected with paint protection film across all high-impact front panels.",
+      work:["Front bumper, bonnet and mirrors wrapped in PPF","Edges wrapped for a seamless finish","Ceramic top-coat over the film"],
+      result:"Invisible protection against stone chips on the panels that take the most abuse."},
+    no:{title:"PPF-folie — daglig GT", vehicle:"Porsche Panamera", service:"Detailing & beskyttelse",
+      desc:"En daglig-kjørt Panamera beskyttet med lakkbeskyttelsesfilm på alle utsatte frontpaneler.",
+      work:["Frontstøtfanger, panser og speil foliert med PPF","Kanter foliert for sømløs finish","Keramisk topplag over folien"],
+      result:"Usynlig beskyttelse mot steinsprut på panelene som utsettes mest."},
+    ru:{title:"Плёнка PPF — GT", vehicle:"Porsche Panamera", service:"Детейлинг и защита",
+      desc:"Ежедневный Panamera защищён плёнкой на всех уязвимых передних панелях.",
+      work:["Передний бампер, капот и зеркала оклеены PPF","Кромки завёрнуты для бесшовности","Керамика поверх плёнки"],
+      result:"Незаметная защита от сколов на самых уязвимых панелях."}},
+
+  {img:"https://images.unsplash.com/photo-1593142927747-8c1b758967a6?q=80&w=1200", alt:"Car engine bay detail",
+    en:{title:"Classic Collection Care", vehicle:"Private classic collection", service:"Detailing & Maintenance",
+      desc:"Ongoing care for a small private collection, including engine-bay detailing and preservation servicing.",
+      work:["Engine-bay clean and dressing","Preservation oil and fluid service","Protective storage preparation"],
+      result:"Show-ready presentation and mechanically preserved between outings."},
+    no:{title:"Pleie av klassikersamling", vehicle:"Privat klassikersamling", service:"Detailing & vedlikehold",
+      desc:"Løpende pleie av en liten privat samling, inkludert motorromsdetailing og bevaringsservice.",
+      work:["Motorrom rengjort og pleiet","Bevaringsservice på olje og væsker","Klargjøring for beskyttet lagring"],
+      result:"Utstillingsklar presentasjon og mekanisk bevart mellom turene."},
+    ru:{title:"Уход за коллекцией классики", vehicle:"Частная коллекция классики", service:"Детейлинг и обслуживание",
+      desc:"Регулярный уход за небольшой частной коллекцией, включая детейлинг моторного отсека и консервацию.",
+      work:["Чистка и уход за моторным отсеком","Консервационное обслуживание масла и жидкостей","Подготовка к защищённому хранению"],
+      result:"Готовность к показу и механическая сохранность между выездами."}},
+
+  {img:"https://images.unsplash.com/photo-1657779913133-45e8414370d8?q=80&w=1200", alt:"Car interior leather seat detail",
+    en:{title:"Interior Restoration", vehicle:"Range Rover", service:"Detailing",
+      desc:"A family Range Rover interior brought back to life with a full deep-clean and leather restoration.",
+      work:["Full interior deep-clean and sanitising","Leather cleaned, repaired and conditioned","Fabrics and trim refreshed"],
+      result:"A cabin that looks and smells fresh again, with revived, protected leather."},
+    no:{title:"Innvendig restaurering", vehicle:"Range Rover", service:"Detailing",
+      desc:"En familie-Range Rover fikk interiøret tilbake til livet med full dyprens og skinnrestaurering.",
+      work:["Full innvendig dyprens og desinfisering","Skinn rengjort, reparert og pleiet","Tekstiler og lister frisket opp"],
+      result:"En kupé som ser ny ut og lukter friskt igjen, med gjenopplivet, beskyttet skinn."},
+    ru:{title:"Восстановление салона", vehicle:"Range Rover", service:"Детейлинг",
+      desc:"Семейный Range Rover: салон возвращён к жизни полной химчисткой и восстановлением кожи.",
+      work:["Полная химчистка и дезинфекция салона","Кожа очищена, восстановлена и обработана","Обновлены ткани и отделка"],
+      result:"Салон снова выглядит и пахнет свежо, кожа восстановлена и защищена."}}
+];
+
+/* ============ CORE HELPERS ============ */
+let currentLang = "en";
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+let state = {view:"home", slug:null};
+
+const viewHome = $("#view-home");
+const viewSub = $("#view-sub");
+const header = $("#header");
+
+/* ============ RENDER: SERVICE PAGE ============ */
+function serviceHTML(slug){
+  const d = SERVICES[slug][currentLang];
+  const L = I18N[currentLang];
+  const list = arr => `<ul class="ticks">${arr.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>`;
+  const items = d.items ? `
+    <h2 class="sp-h">${L.sp_pricelist}</h2>
+    <div class="repair">
+      <div class="repair-head"><span>${L.it_service}</span><span>${L.it_time}</span><span>${L.it_price}</span></div>
+      ${d.items.map(it=>`<div class="repair-row"><div><b>${esc(it.name)}</b><small>${esc(it.desc)}</small></div><span>${esc(it.time)}</span><span>${esc(it.price)}</span></div>`).join("")}
+    </div>` : "";
+  const faq = `<h2 class="sp-h">${L.sp_faq}</h2><div class="faq">${d.faq.map(f=>`<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}</div>`;
+
+  return `<div class="subpage"><div class="wrap">
+    <nav class="crumb"><a href="#/">${L.sp_home}</a> / <a href="#services">${L.sp_services_bc}</a> / <span>${esc(d.title)}</span></nav>
+    <span class="eyebrow">${esc(d.cat)}</span>
+    <h1 class="sp-title">${esc(d.title)}</h1>
+    <p class="sp-tagline">${esc(d.tagline)}</p>
+    <div class="sp-grid">
+      <div class="sp-main">
+        <p class="sp-intro">${esc(d.intro)}</p>
+        <h2 class="sp-h">${L.sp_includes}</h2>${list(d.includes)}
+        ${items}
+        <h2 class="sp-h">${L.sp_usecases}</h2>${list(d.usecases)}
+        <h2 class="sp-h">${L.sp_expect}</h2>${list(d.expect)}
+        ${faq}
+      </div>
+      <aside class="sp-card">
+        <div class="sp-price-k">${L.sp_price}</div>
+        <div class="sp-price">${esc(d.price)}</div>
+        <div class="sp-meta"><span>${L.sp_duration}</span><b>${esc(d.duration)}</b></div>
+        <p class="sp-disc">${L.sp_disclaimer}</p>
+        <a href="#/booking/${slug}" class="btn btn-primary" style="width:100%">${L.sp_book}</a>
+        <a href="#services" class="btn btn-ghost" style="width:100%;margin-top:10px">${L.sp_back}</a>
+      </aside>
+    </div>
+    <div class="cta-band">
+      <div><h3>${L.cta_h}</h3><p>${L.cta_p}</p></div>
+      <a href="#/booking/${slug}" class="btn btn-primary">${L.sp_book}</a>
+    </div>
+  </div></div>`;
+}
+
+/* ============ RENDER: BOOKING PAGE ============ */
+function bookingHTML(preset){
+  const L = I18N[currentLang];
+  const opts = `<option value="" disabled ${preset?"":"selected"}>${L.f_service_ph}</option>` +
+    bookingServices.map(o=>`<option value="${o.v}" ${o.v===preset?"selected":""}>${esc(L[o.k])}</option>`).join("");
+  const times = `<option value="" selected>${L.f_time_ph}</option>` +
+    [["morning",L.t_morning],["midday",L.t_midday],["afternoon",L.t_afternoon]].map(t=>`<option value="${t[0]}">${esc(t[1])}</option>`).join("");
+
+  return `<div class="subpage"><div class="wrap" style="max-width:900px">
+    <nav class="crumb"><a href="#/">${L.sp_home}</a> / <span>${L.nav_booking}</span></nav>
+    <span class="eyebrow">${L.bp_eyebrow}</span>
+    <h1 class="sp-title">${L.bp_title}</h1>
+    <p class="sp-tagline">${L.bp_sub}</p>
+    <div class="notice">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>${L.bp_notice}</span>
+    </div>
+
+    <div class="panel" id="bookPanel">
+      <form id="bookingForm" novalidate>
+        <div class="row2">
+          <div class="field"><label>${L.f_name}</label><input type="text" name="name" required placeholder="Ola Nordmann"></div>
+          <div class="field"><label>${L.f_phone}</label><input type="tel" name="phone" required placeholder="+47 900 00 000"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>${L.f_email}</label><input type="email" name="email" required placeholder="ola@epost.no"></div>
+          <div class="field"><label>${L.f_reg}</label><input type="text" name="reg" placeholder="EK 12345"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>${L.f_make}</label><input type="text" name="make" required placeholder="Porsche · Tesla · BMW …"></div>
+          <div class="field"><label>${L.f_model}</label><input type="text" name="model" required placeholder="911 · Model 3 · 520d …"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>${L.f_year}</label><input type="number" name="year" min="1950" max="2030" placeholder="2021"></div>
+          <div class="field"><label>${L.f_service}</label><select name="service" required>${opts}</select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>${L.f_date}</label><input type="date" name="date" required></div>
+          <div class="field"><label>${L.f_time}</label><select name="time">${times}</select></div>
+        </div>
+        <div class="field"><label>${L.f_msg}</label><textarea name="message" placeholder="${L.f_msg_ph}"></textarea></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px" id="bookSubmit">${L.bp_submit}</button>
+        <div class="form-msg" id="bookMsg" role="status"></div>
+      </form>
+    </div>
+
+    <div class="panel ok-panel" id="bookOk" style="display:none">
+      <div class="ok-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3>${L.bp_ok_title}</h3>
+      <p>${L.bp_ok}</p>
+      <p class="notice-inline">${L.bp_notice}</p>
+      <a href="#/" class="btn btn-ghost">${L.bp_home_btn}</a>
+    </div>
+  </div></div>`;
+}
+
+/* attach booking form submit after it is rendered */
+function attachBooking(){
+  const form = $("#bookingForm");
+  if(!form) return;
+  form.addEventListener("submit", async function(e){
+    e.preventDefault();
+    const L = I18N[currentLang];
+    const msg = $("#bookMsg");
+    const data = Object.fromEntries(new FormData(form).entries());
+    if(!data.name||!data.phone||!data.email||!data.make||!data.model||!data.service||!data.date){
+      msg.className = "form-msg err";
+      msg.textContent = L.bp_err;
+      return;
+    }
+    const btn = $("#bookSubmit");
+    btn.disabled = true; btn.textContent = L.bp_sending;
+    msg.className = "form-msg"; msg.textContent = "";
+
+    const showSuccess = ()=>{
+      $("#bookPanel").style.display = "none";
+      const ok = $("#bookOk");
+      ok.style.display = "block";
+      ok.scrollIntoView({behavior:"smooth", block:"center"});
+    };
+
+    const payload = new FormData(form);
+    payload.append("_subject", "New booking request — RAVN Automotive");
+    payload.append("_template", "table");
+    payload.append("_captcha", "false");
+
+    try{
+      const res = await fetch(BOOKING_ENDPOINT,{
+        method:"POST",
+        headers:{ "Accept":"application/json" },
+        body:payload
+      });
+      if(res.ok){ showSuccess(); }
+      else { throw new Error("bad response"); }
+    }catch(err){
+      btn.disabled = false; btn.textContent = L.bp_submit;
+      msg.className = "form-msg err"; msg.textContent = L.bp_send_err;
+    }
+  });
+}
+
+/* ============ PROJECT MODAL ============ */
+let openProject = null;
+function renderRail(){
+  const rail = $("#rail");
+  rail.innerHTML = PROJECTS.map((p,i)=>{
+    const d = p[currentLang];
+    return `<button class="shot" data-project="${i}" aria-label="${esc(d.title)}">
+      <img src="${p.img}" alt="${esc(p.alt)}" loading="lazy">
+      <figcaption><span>${esc(d.title)}</span><span class="view">${I18N[currentLang].sp_learn}</span></figcaption>
+    </button>`;
+  }).join("");
+}
+function openModal(i){
+  openProject = i;
+  const p = PROJECTS[i], d = p[currentLang], L = I18N[currentLang];
+  $("#modalContent").innerHTML = `
+    <button class="modal-close" id="modalClose" aria-label="${L.pj_close}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <img src="${p.img}" alt="${esc(p.alt)}">
+    <div class="modal-body">
+      <div class="m-cat">${esc(d.service)}</div>
+      <h3>${esc(d.title)}</h3>
+      <div class="m-meta">
+        <div><div class="k">${L.pj_vehicle}</div><div class="val">${esc(d.vehicle)}</div></div>
+        <div><div class="k">${L.pj_service}</div><div class="val">${esc(d.service)}</div></div>
+      </div>
+      <p class="m-desc">${esc(d.desc)}</p>
+      <div class="m-h">${L.pj_work}</div>
+      <ul class="ticks">${d.work.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>
+      <div class="m-result"><strong>${L.pj_result}:</strong> ${esc(d.result)}</div>
+    </div>`;
+  const overlay = $("#projectModal");
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+  $("#modalClose").addEventListener("click", closeModal);
+}
+function closeModal(){
+  openProject = null;
+  const overlay = $("#projectModal");
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+}
+$("#projectModal").addEventListener("click", e=>{ if(e.target.id==="projectModal") closeModal(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && openProject!==null) closeModal(); });
+/* delegate rail clicks */
+$("#rail").addEventListener("click", e=>{
+  const btn = e.target.closest("[data-project]");
+  if(btn) openModal(+btn.dataset.project);
+});
+
+/* ============ i18n APPLY ============ */
+function applyLang(lang){
+  currentLang = lang;
+  const dict = I18N[lang];
+  document.documentElement.lang = lang;
+  $$("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    if(dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  $$(".lang button").forEach(b=>b.classList.toggle("active", b.dataset.lang===lang));
+  renderRail();
+  /* re-render dynamic views in the new language */
+  if(state.view === "service") viewSub.innerHTML = serviceHTML(state.slug);
+  else if(state.view === "booking"){ viewSub.innerHTML = bookingHTML(state.slug); attachBooking(); }
+  if(openProject !== null) openModal(openProject);
+}
+$$(".lang button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.lang)));
+
+/* ============ HEADER STATE ============ */
+function updateHeaderBg(){
+  header.classList.toggle("scrolled", window.scrollY>20 || state.view!=="home");
+}
+window.addEventListener("scroll", updateHeaderBg);
+
+/* ============ MOBILE MENU ============ */
+const navLinks = $("#navLinks");
+$("#burger").addEventListener("click", ()=> navLinks.classList.toggle("open"));
+navLinks.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>navLinks.classList.remove("open")));
+
+/* ============ HERO SOUND TOGGLE ============ */
+const video = $("#heroVideo"), soundBtn = $("#soundBtn"), soundIcon = $("#soundIcon");
+const iconMuted = '<path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+const iconOn = '<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>';
+soundBtn.addEventListener("click", ()=>{
+  video.muted = !video.muted;
+  if(!video.muted){ video.play().catch(()=>{}); soundIcon.innerHTML = iconOn; }
+  else { soundIcon.innerHTML = iconMuted; }
+});
+
+/* ============ STAT COUNT-UP ============ */
+function animateCount(el){
+  const target = +el.dataset.count;
+  const dur = 1600, start = performance.now();
+  const fmt = n => n>=1000 ? n.toLocaleString("en-US").replace(/,/g," ") : String(n);
+  function tick(now){
+    const p = Math.min((now-start)/dur,1);
+    const eased = 1-Math.pow(1-p,3);
+    el.textContent = fmt(Math.round(target*eased));
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const statObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ animateCount(e.target); statObserver.unobserve(e.target); } });
+},{threshold:.6});
+$$("[data-count]").forEach(el=>statObserver.observe(el));
+
+/* ============ HASH ROUTER ============ */
+function scrollTop(){ window.scrollTo({top:0, behavior:"auto"}); }
+
+function showView(name){
+  const home = name==="home";
+  viewHome.style.display = home ? "block" : "none";
+  viewSub.style.display = home ? "none" : "block";
+}
+
+function router(){
+  const raw = location.hash || "#/";
+  navLinks.classList.remove("open");
+
+  if(raw.startsWith("#/")){
+    const path = raw.slice(2); // after "#/"
+    if(path === ""){
+      state = {view:"home", slug:null};
+      showView("home"); scrollTop();
+    } else if(path === "booking" || path.startsWith("booking/")){
+      const preset = path.split("/")[1] || "";
+      state = {view:"booking", slug:preset};
+      viewSub.innerHTML = bookingHTML(preset);
+      attachBooking();
+      showView("booking"); scrollTop();
+      document.title = I18N[currentLang].bp_title + " — RAVN Automotive";
+    } else if(path.startsWith("services/")){
+      const slug = path.split("/")[1];
+      if(SERVICES[slug]){
+        state = {view:"service", slug};
+        viewSub.innerHTML = serviceHTML(slug);
+        showView("service"); scrollTop();
+        document.title = SERVICES[slug][currentLang].title + " — RAVN Automotive";
+      } else { location.hash = "#/"; return; }
+    } else {
+      location.hash = "#/"; return; // unknown route → home, never 404
+    }
+  } else {
+    /* bare anchor (#services / #gallery / #contact / #top) → home + smooth scroll */
+    if(state.view !== "home"){ state = {view:"home", slug:null}; showView("home"); }
+    const id = raw.slice(1);
+    const el = document.getElementById(id);
+    if(el){ requestAnimationFrame(()=> el.scrollIntoView({behavior:"smooth", block:"start"})); }
+    else scrollTop();
+  }
+  updateHeaderBg();
+}
+window.addEventListener("hashchange", router);
+
+/* ============ INIT ============ */
+$("#year").textContent = new Date().getFullYear();
+applyLang("en");
+router();
+</script>
+</body>
+</html>
